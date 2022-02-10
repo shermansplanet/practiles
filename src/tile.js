@@ -11,12 +11,12 @@ export default class Tile extends React.Component {
     let linedata = this.props.lines;
     let lines = [];
     const bg = 'white';
-    const fg = 'black';
+    const fg = '#555';
 
     for (let i = 0; i < 6; i++) {
       let a = ((i + 0.5) * Math.PI) / 3;
-      let vertx = Math.cos(a) * POLYGON_TIP_RADIUS + POLYGON_EDGE_RADIUS;
-      let verty = Math.sin(a) * POLYGON_TIP_RADIUS + POLYGON_TIP_RADIUS;
+      let vertx = Math.cos(a) * (POLYGON_TIP_RADIUS - 1) + POLYGON_EDGE_RADIUS;
+      let verty = Math.sin(a) * (POLYGON_TIP_RADIUS - 1) + POLYGON_TIP_RADIUS;
       let centerstring = vertx + ',' + verty + ' ';
       pointstring += centerstring;
     }
@@ -43,21 +43,61 @@ export default class Tile extends React.Component {
         } ${x2},${y2}`;
 
       lines.push(
-        // <path
-        //   style={{ fill: 'none', stroke: bg, strokeWidth: 10 }}
-        //   d={pathstring}
-        // />,
+        <path
+          style={{ fill: 'none', stroke: bg, strokeWidth: 8 }}
+          d={pathstring}
+        />,
         <path
           style={{ fill: 'none', stroke: fg, strokeWidth: 4 }}
           d={pathstring}
         />
       );
+
+      if (!linedata[i][2]) continue;
+
+      let linelen = Math.min(Math.abs(i1 - i2), 6 - Math.abs(i1 - i2));
+      let lerp2 = linelen == 1 ? 0.45 : 0.25;
+      let lerp3 = linelen == 1 ? 0.275 : 0.05;
+      let cx =
+        x1 * (1 - lerp2 - lerp3) + POLYGON_EDGE_RADIUS * lerp2 + x2 * lerp3;
+      let cy =
+        y1 * (1 - lerp2 - lerp3) + POLYGON_TIP_RADIUS * lerp2 + y2 * lerp3;
+      lines.push(
+        <circle
+          cx={cx}
+          cy={cy}
+          r="12"
+          style={{ fill: bg, stroke: fg, strokeWidth: 2 }}
+        />
+      );
+
+      lines.push(
+        <text
+          text-anchor="middle"
+          x={cx}
+          y={cy + 6}
+          style={{ font: 'bold 18px sans-serif' }}
+        >
+          {linedata[i][2]}
+        </text>
+      );
     }
     return (
-      <svg height={POLYGON_TIP_RADIUS * 2} width={POLYGON_EDGE_RADIUS * 2}>
+      <svg
+        height={POLYGON_TIP_RADIUS * 2}
+        width={POLYGON_EDGE_RADIUS * 2}
+        style={{
+          position: 'absolute',
+          transform: `translate(${this.props.x}px, ${this.props.y}px)`,
+        }}
+      >
         <polygon
           points={pointstring}
-          style={{ fill: bg, stroke: '#aaa', strokeWidth: 1 }}
+          style={{
+            fill: bg,
+            stroke: '#ccc',
+            strokeWidth: 2,
+          }}
         />
         {lines}
       </svg>

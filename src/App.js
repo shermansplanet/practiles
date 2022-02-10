@@ -1,4 +1,5 @@
 import React from 'react';
+import { POLYGON_OFFSET, POLYGON_EDGE_RADIUS } from './consts';
 import './style.css';
 import Tile from './tile';
 
@@ -24,22 +25,31 @@ onValue(dbref, (snapshot) => {
 });
 
 export default function App() {
-  return (
-    <div>
-      <Tile
-        lines={[
-          [0, 2, true],
-          [1, 3, true],
-          [4, 5, true],
-        ]}
-      />
-      <Tile
-        lines={[
-          [0, 3, true],
-          [1, 5, true],
-          [2, 4, true],
-        ]}
-      />
-    </div>
-  );
+  let tiles = [];
+  const n = 5;
+  const symbols = ['🔥', '💧', '🪨', '💨', '🌱', '⚙️'];
+  for (let i = 0; i < n * n; i++) {
+    let indices = [0, 1, 2, 3, 4, 5];
+    let lines = [];
+    for (let _ = 0; _ < 3; _++) {
+      let line = [];
+      for (let _ = 0; _ < 2; _++) {
+        let randi = Math.floor(Math.random() * indices.length);
+        line.push(indices[randi]);
+        indices.splice(randi, 1);
+      }
+      line = [
+        ...line,
+        Math.random() > 0.25
+          ? false
+          : symbols[Math.floor(Math.random() * symbols.length)],
+      ];
+      lines.push(line);
+    }
+    let y = Math.floor(i / n);
+    let x = ((i % n) * 2 + (y % 2)) * POLYGON_EDGE_RADIUS;
+    y *= POLYGON_OFFSET;
+    tiles.push(<Tile key={i} lines={lines} x={x} y={y} />);
+  }
+  return <div>{tiles}</div>;
 }
