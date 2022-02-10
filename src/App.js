@@ -24,5 +24,22 @@ onValue(dbref, (snapshot) => {
 });
 
 export default function App() {
-  return <Tile />;
+  return (
+    <div>
+      <Tile
+        lines={[
+          [0, 2, true],
+          [1, 3, true],
+          [4, 5, true],
+        ]}
+      />
+      <Tile
+        lines={[
+          [0, 3, true],
+          [1, 5, true],
+          [2, 4, true],
+        ]}
+      />
+    </div>
+  );
 }
