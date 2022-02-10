@@ -1,5 +1,6 @@
 import React from 'react';
 import './style.css';
+import Tile from './tile';
 
 import { initializeApp } from 'firebase/app';
 import { getDatabase, ref, onValue } from 'firebase/database';
@@ -23,10 +24,5 @@ onValue(dbref, (snapshot) => {
 });
 
 export default function App() {
-  return (
-    <div>
-      <h1>Hello StackBlitz!</h1>
-      <p>Start editing to see some magic happen :)</p>
-    </div>
-  );
+  return <Tile />;
 }
