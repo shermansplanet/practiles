@@ -1,6 +1,16 @@
 import React from 'react';
-import { POLYGON_TIP_RADIUS, POLYGON_EDGE_RADIUS } from './consts';
-import { GetPaths } from './tileUtils';
+import {
+  POLYGON_TIP_RADIUS,
+  POLYGON_OFFSET,
+  POLYGON_EDGE_RADIUS,
+} from './consts';
+
+import {
+  GetPaths,
+  GetRandomTile,
+  GetRandomPiece,
+  RotatePiece,
+} from './tileUtils';
 
 import PlayArea from './playArea';
 import Tile from './tile';
@@ -10,7 +20,7 @@ export default class Game extends React.Component {
     super(props);
     let tiles = [
       {
-        ...this.randomTile(),
+        ...GetRandomTile(),
         x: 0,
         y: 0,
         neighbors: [null, null, null, null, null, null],
@@ -18,7 +28,9 @@ export default class Game extends React.Component {
     ];
     this.state = {
       pathData: GetPaths(tiles),
-      currentPiece: { ...this.randomTile(), x: -1000, y: -1000 },
+      currentPiece: GetRandomPiece(),
+      mouseX: 0,
+      mouseY: 0,
       tiles,
     };
   }
@@ -27,11 +39,8 @@ export default class Game extends React.Component {
     if (this.state.currentPiece == null) return;
     this.setState((prev) => {
       return {
-        currentPiece: {
-          ...prev.currentPiece,
-          x: e.clientX - POLYGON_EDGE_RADIUS,
-          y: e.clientY - POLYGON_TIP_RADIUS,
-        },
+        mouseX: e.clientX,
+        mouseY: e.clientY,
       };
     });
   };
@@ -47,47 +56,44 @@ export default class Game extends React.Component {
       [1, -1],
     ];
     this.setState((prev) => {
-      let neighbors = [];
-      for (let side = 0; side < 6; side++) {
-        let dir = directions[side];
-        let targetX = spot.x + dir[0];
-        let targetY = spot.y + dir[1];
-        let connected = null;
-        for (let i in prev.tiles) {
-          let otherTile = prev.tiles[i];
-          if (otherTile.x != targetX || otherTile.y != targetY) continue;
-          connected = i;
-          otherTile.neighbors[(side + 3) % 6] = prev.tiles.length;
-          break;
+      for (let tile of prev.currentPiece.tiles) {
+        let neighbors = [];
+        for (let side = 0; side < 6; side++) {
+          let dir = directions[side];
+          let targetX = spot.x + dir[0];
+          let targetY = spot.y + dir[1];
+          let connected = null;
+          for (let i in prev.tiles) {
+            let otherTile = prev.tiles[i];
+            if (otherTile.x != targetX || otherTile.y != targetY) continue;
+            connected = i;
+            otherTile.neighbors[(side + 3) % 6] = prev.tiles.length;
+            break;
+          }
+          neighbors.push(connected);
         }
-        neighbors.push(connected);
+        let newPiece = {
+          ...tile,
+          x: spot.x + tile.x,
+          y: spot.y + tile.y,
+          neighbors,
+        };
+        prev.tiles.push(newPiece);
       }
-      let newPiece = {
-        ...prev.currentPiece,
-        x: spot.x,
-        y: spot.y,
-        neighbors,
-      };
-      let tiles = [...prev.tiles, newPiece];
       return {
-        pathData: GetPaths(tiles),
-        currentPiece: { ...this.randomTile(), x: -1000, y: -1000 },
-        tiles,
+        pathData: GetPaths(prev.tiles),
+        currentPiece: GetRandomPiece(),
+        tiles: prev.tiles,
       };
     });
   };
 
   onkeypress = (e) => {
     e = e || window.event;
-    if (e.keyCode == 32) {
+    if (e.keyCode == 32 && this.state.currentPiece != null) {
       // ROTATE
       this.setState((prev) => {
-        let currentPiece = prev.currentPiece;
-        for (let line of currentPiece.lines) {
-          line[0] = (line[0] + 1) % 6;
-          line[1] = (line[1] + 1) % 6;
-        }
-        return { currentPiece };
+        return { currentPiece: RotatePiece(prev.currentPiece) };
       });
     } else if (e.keyCode == 27) {
       this.setState({ currentPiece: null });
@@ -101,33 +107,24 @@ export default class Game extends React.Component {
     document.removeEventListener('keydown', this.onkeypress, false);
   }
 
-  randomTile = () => {
-    const symbols = ['🔥', '💧', '🪨', '💨', '🌿', '⚙️', '☀️', '🌑', '🗝', '⛓'];
-    let indices = [0, 1, 2, 3, 4, 5];
-    let lines = [];
-    for (let _ = 0; _ < 3; _++) {
-      let line = [];
-      for (let _ = 0; _ < 2; _++) {
-        let randi = Math.floor(Math.random() * indices.length);
-        line.push(indices[randi]);
-        indices.splice(randi, 1);
-      }
-      line = [
-        ...line,
-        Math.random() > 0.25
-          ? false
-          : symbols[Math.floor(Math.random() * symbols.length)],
-      ];
-      lines.push(line);
-    }
-    return { lines };
-  };
-
   render() {
-    let heldTile = null;
+    let heldTiles = [];
     let cp = this.state.currentPiece;
     if (cp != null) {
-      heldTile = <Tile key="heldTile" lines={cp.lines} x={cp.x} y={cp.y} />;
+      for (let i in cp.tiles) {
+        let tile = cp.tiles[i];
+        let y = tile.y;
+        let x = (tile.x * 2 + y) * POLYGON_EDGE_RADIUS;
+        y *= POLYGON_OFFSET;
+        heldTiles.push(
+          <Tile
+            key={'heldTile_' + i}
+            lines={tile.lines}
+            x={x + this.state.mouseX - cp.centerX}
+            y={y + this.state.mouseY - cp.centerY}
+          />
+        );
+      }
     }
     return (
       <div className="fullscreen" onMouseMove={this.onMove}>
@@ -135,8 +132,16 @@ export default class Game extends React.Component {
           tiles={this.state.tiles}
           placePiece={this.placePiece}
           pathData={this.state.pathData}
+          placementPosition={
+            cp == null
+              ? { x: 0, y: 0 }
+              : {
+                  c: this.state.mouseX - cp.centerX,
+                  y: this.state.mouseY - cp.centerY,
+                }
+          }
         />
-        {heldTile}
+        {heldTiles}
       </div>
     );
   }

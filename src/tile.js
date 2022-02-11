@@ -55,10 +55,12 @@ export default class Tile extends React.Component {
 
       lines.push(
         <path
+          key={'outline_' + i}
           style={{ fill: 'none', stroke: bg, strokeWidth: 8 }}
           d={pathstring}
         />,
         <path
+          key={'line_' + i}
           style={{ fill: 'none', stroke: lineColor, strokeWidth: 4 }}
           d={pathstring}
         />
@@ -75,6 +77,7 @@ export default class Tile extends React.Component {
         y1 * (1 - lerp2 - lerp3) + POLYGON_TIP_RADIUS * lerp2 + y2 * lerp3;
       lines.push(
         <circle
+          key={'circle_' + i}
           cx={cx}
           cy={cy}
           r="12"
@@ -85,6 +88,7 @@ export default class Tile extends React.Component {
       if (isLoop) continue;
       lines.push(
         <text
+          key={'symbol_' + i}
           textAnchor="middle"
           x={cx}
           y={cy + 6.9}

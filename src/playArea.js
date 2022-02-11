@@ -13,9 +13,14 @@ export default class PlayArea extends React.Component {
     this.state = { offset: { x: 0, y: 0 } };
   }
   click = (e) => {
-    let y = Math.floor((e.clientY - this.state.offset.y) / POLYGON_OFFSET);
+    let y = Math.floor(
+      (this.props.placementPosition.y - this.state.offset.y) / POLYGON_OFFSET
+    );
     let x = Math.floor(
-      ((e.clientX - this.state.offset.x) / POLYGON_EDGE_RADIUS - y) / 2
+      ((this.props.placementPosition.x - this.state.offset.x) /
+        POLYGON_EDGE_RADIUS -
+        y) /
+        2
     );
     this.props.placePiece({ x, y });
   };
@@ -42,7 +47,7 @@ export default class PlayArea extends React.Component {
       y += this.state.offset.y;
       tiles.push(
         <Tile
-          key={i}
+          key={'tile_' + i}
           lines={tile.lines}
           x={x}
           y={y}
