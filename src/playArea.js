@@ -12,11 +12,30 @@ import Tile from './tile';
 export default class PlayArea extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { offset: { x: 0, y: 0 } };
+    this.state = { mouseDown: false, offset: { x: 0, y: 0 } };
   }
+
   click = (e) => {
+    this.setState({ mouseDown: true });
     if (!this.canPlace()) return;
     this.props.placePiece(this.getBasePosition());
+  };
+
+  unclick = (e) => {
+    this.setState({ mouseDown: false });
+  };
+
+  drag = (e) => {
+    if (!this.state.mouseDown) return;
+    if (e.movementX == 0 && e.movementY == 0) return;
+    this.setState((prev) => {
+      return {
+        offset: {
+          x: prev.offset.x + e.movementX,
+          y: prev.offset.y + e.movementY,
+        },
+      };
+    });
   };
 
   getBasePosition = () => {
@@ -78,7 +97,8 @@ export default class PlayArea extends React.Component {
     let tiles = [];
 
     let shadow = [];
-    if (this.canPlace()) {
+    let canPlace = this.canPlace();
+    if (canPlace) {
       let cp = this.props.currentPiece;
       let pos = this.getBasePosition();
       for (let i in cp.tiles) {
@@ -134,8 +154,18 @@ export default class PlayArea extends React.Component {
     return (
       <div
         onMouseDown={this.click}
+        onMouseUp={this.unclick}
+        onMouseLeave={this.unclick}
+        onMouseMove={this.drag}
         className="playArea"
-        style={{ right: SIDEBAR_WIDTH }}
+        style={{
+          right: SIDEBAR_WIDTH,
+          cursor: canPlace
+            ? 'default'
+            : this.state.mouseDown
+            ? 'grabbing'
+            : 'grab',
+        }}
         ref={this.areaRef}
       >
         {shadow}

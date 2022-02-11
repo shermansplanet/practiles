@@ -33,6 +33,7 @@ export default class Game extends React.Component {
       ],
       pathData: GetPaths(tiles),
       currentPiece: null,
+      currentPieceIndex: null,
       mouseX: 0,
       mouseY: 0,
       tiles,
@@ -40,12 +41,19 @@ export default class Game extends React.Component {
   }
 
   onMove = (e) => {
-    if (this.state.currentPiece == null) return;
-    this.setState((prev) => {
-      return {
-        mouseX: e.clientX,
-        mouseY: e.clientY,
-      };
+    this.setState({
+      mouseX: e.clientX,
+      mouseY: e.clientY,
+    });
+  };
+
+  select = (pieceIndex) => {
+    this.setState({
+      currentPieceIndex: parseInt(pieceIndex),
+      currentPiece:
+        pieceIndex == null
+          ? null
+          : JSON.parse(JSON.stringify(this.state.sidebarPieces[pieceIndex])),
     });
   };
 
@@ -68,7 +76,6 @@ export default class Game extends React.Component {
           }
           neighbors.push(connected);
         }
-        console.log(spot.x, tile.x, spot.y, tile.y);
         let newPiece = {
           ...tile,
           x: spot.x + tile.x,
@@ -77,9 +84,15 @@ export default class Game extends React.Component {
         };
         prev.tiles.push(newPiece);
       }
+      let sidebarPieces = prev.sidebarPieces;
+      sidebarPieces[prev.currentPieceIndex] = GetRandomPiece(
+        prev.currentPieceIndex + 1
+      );
       return {
+        sidebarPieces,
         pathData: GetPaths(prev.tiles),
-        currentPiece: GetRandomPiece(3),
+        currentPiece: null,
+        currentPieceIndex: null,
         tiles: prev.tiles,
       };
     });
@@ -93,7 +106,7 @@ export default class Game extends React.Component {
         return { currentPiece: RotatePiece(prev.currentPiece) };
       });
     } else if (e.keyCode == 27) {
-      this.setState({ currentPiece: null });
+      this.setState({ currentPiece: null, currentPieceIndex: null });
     }
   };
 
@@ -139,7 +152,11 @@ export default class Game extends React.Component {
                 }
           }
         />
-        <Sidebar pieces={this.state.sidebarPieces} />
+        <Sidebar
+          pieces={this.state.sidebarPieces}
+          select={this.select}
+          selectedIndex={this.state.currentPieceIndex}
+        />
         {heldTiles}
       </div>
     );

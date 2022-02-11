@@ -22,6 +22,7 @@ export default class Sidebar extends React.Component {
     ];
     let pieces = [];
     for (let pieceIndex in this.props.pieces) {
+      if (this.props.selectedIndex == pieceIndex) continue;
       const pi = pieceIndex;
       let piece = this.props.pieces[pieceIndex];
       let piecePos = piecePositions[pieceIndex];
@@ -37,13 +38,19 @@ export default class Sidebar extends React.Component {
             lines={tile.lines}
             x={x + piecePos.x - piece.centerX}
             y={y + piecePos.y - piece.centerY}
-            mouseovercb={() => this.mouseover(pi)}
+            mouseEnterCb={() => this.mouseover(pi)}
+            onClickCb={() => this.props.select(pi)}
           />
         );
       }
     }
     return (
       <div className="sidebar" style={{ width: SIDEBAR_WIDTH }}>
+        <div
+          style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+          onMouseEnter={() => this.mouseover(null)}
+          onMouseDown={() => this.props.select(null)}
+        />
         {pieces}
       </div>
     );
