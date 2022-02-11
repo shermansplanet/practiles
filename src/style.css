@@ -1,3 +1,10 @@
-h1, p {
-  font-family: Lato;
+.fullscreen {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: stretch;
+  align-content: stretch;
 }
