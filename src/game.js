@@ -10,6 +10,7 @@ import {
 } from './tileUtils';
 
 import PlayArea from './playArea';
+import Sidebar from './sidebar';
 import Tile from './tile';
 
 export default class Game extends React.Component {
@@ -24,8 +25,14 @@ export default class Game extends React.Component {
       },
     ];
     this.state = {
+      sidebarPieces: [
+        GetRandomPiece(1),
+        GetRandomPiece(2),
+        GetRandomPiece(3),
+        GetRandomPiece(4),
+      ],
       pathData: GetPaths(tiles),
-      currentPiece: GetRandomPiece(3),
+      currentPiece: null,
       mouseX: 0,
       mouseY: 0,
       tiles,
@@ -132,6 +139,7 @@ export default class Game extends React.Component {
                 }
           }
         />
+        <Sidebar pieces={this.state.sidebarPieces} />
         {heldTiles}
       </div>
     );

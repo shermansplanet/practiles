@@ -94,18 +94,20 @@ export default class Tile extends React.Component {
       <svg
         height={POLYGON_TIP_RADIUS * 2}
         width={POLYGON_EDGE_RADIUS * 2}
+        onMouseEnter={this.props.mouseovercb}
         style={{
-          pointerEvents: 'none',
+          pointerEvents: this.props.mouseovercb == undefined ? 'none' : '',
           position: 'absolute',
           transform: `translate(${this.props.x}px, ${this.props.y}px)`,
+          cursor: this.props.highlighted ? 'pointer' : 'default',
         }}
       >
         <polygon
           points={pointstring}
           style={{
             fill: bg,
-            stroke: '#ccc',
-            strokeWidth: 2,
+            stroke: this.props.highlighted ? '#900' : '#ccc',
+            strokeWidth: this.props.highlighted ? 4 : 2,
           }}
         />
         {lines}

@@ -4,6 +4,7 @@ import {
   POLYGON_OFFSET,
   POLYGON_TIP_RADIUS,
   POLYGON_EDGE_RADIUS,
+  SIDEBAR_WIDTH,
 } from './consts';
 import { directions, pointstring } from './tileUtils';
 import Tile from './tile';
@@ -131,7 +132,12 @@ export default class PlayArea extends React.Component {
       );
     }
     return (
-      <div onMouseDown={this.click} className="playArea" ref={this.areaRef}>
+      <div
+        onMouseDown={this.click}
+        className="playArea"
+        style={{ right: SIDEBAR_WIDTH }}
+        ref={this.areaRef}
+      >
         {shadow}
         {tiles}
       </div>
