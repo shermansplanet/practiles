@@ -31,6 +31,7 @@ export default class Game extends React.Component {
         GetRandomPiece(3),
         GetRandomPiece(4),
       ],
+      sidebarUpdateToggle: false,
       pathData: GetPaths(tiles),
       currentPiece: null,
       currentPieceIndex: null,
@@ -94,6 +95,7 @@ export default class Game extends React.Component {
         currentPiece: null,
         currentPieceIndex: null,
         tiles: prev.tiles,
+        sidebarUpdateToggle: !prev.sidebarUpdateToggle,
       };
     });
   };
@@ -153,9 +155,11 @@ export default class Game extends React.Component {
           }
         />
         <Sidebar
+          key={'sidebar' + this.state.sidebarUpdateToggle}
           pieces={this.state.sidebarPieces}
           select={this.select}
           selectedIndex={this.state.currentPieceIndex}
+          updateToggle={this.state.sidebarUpdateToggle}
         />
         {heldTiles}
       </div>
