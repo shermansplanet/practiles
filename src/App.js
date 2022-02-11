@@ -22,7 +22,6 @@ const db = getDatabase(app);
 const dbref = ref(db, '/');
 onValue(dbref, (snapshot) => {
   const data = snapshot.val();
-  console.log(data);
 });
 
 export default function App() {

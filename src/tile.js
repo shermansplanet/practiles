@@ -75,7 +75,7 @@ export default class Tile extends React.Component {
         <text
           text-anchor="middle"
           x={cx}
-          y={cy + 6.5}
+          y={cy + 6.9}
           style={{ font: 'bold 18px sans-serif' }}
         >
           {linedata[i][2]}

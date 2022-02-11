@@ -27,7 +27,6 @@ export default class Game extends React.Component {
   };
 
   placePiece = (spot) => {
-    console.log('place');
     if (this.state.currentPiece == null) return;
     this.setState((prev) => {
       return {
@@ -36,6 +35,30 @@ export default class Game extends React.Component {
       };
     });
   };
+
+  onkeypress = (e) => {
+    e = e || window.event;
+    if (e.keyCode == 32) {
+      // ROTATE
+      this.setState((prev) => {
+        let currentPiece = prev.currentPiece;
+        for (let line of currentPiece.lines) {
+          line[0] = (line[0] + 1) % 6;
+          line[1] = (line[1] + 1) % 6;
+        }
+        return { currentPiece };
+      });
+    } else if (e.keyCode == 27) {
+      this.setState({ currentPiece: null });
+    }
+  };
+
+  componentDidMount() {
+    document.addEventListener('keydown', this.onkeypress, false);
+  }
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.onkeypress, false);
+  }
 
   randomTile = () => {
     const symbols = ['🔥', '💧', '🪨', '💨', '🌿', '⚙️', '☀️', '🌑', '🗝', '⛓'];
@@ -63,7 +86,7 @@ export default class Game extends React.Component {
     let heldTile = null;
     let cp = this.state.currentPiece;
     if (cp != null) {
-      heldTile = <Tile lines={cp.lines} x={cp.x} y={cp.y} />;
+      heldTile = <Tile key="heldTile" lines={cp.lines} x={cp.x} y={cp.y} />;
     }
     return (
       <div className="fullscreen" onMouseMove={this.onMove}>
