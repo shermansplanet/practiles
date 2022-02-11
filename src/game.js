@@ -1,5 +1,6 @@
 import React from 'react';
 import { POLYGON_TIP_RADIUS, POLYGON_EDGE_RADIUS } from './consts';
+import { GetPaths } from './tileUtils';
 
 import PlayArea from './playArea';
 import Tile from './tile';
@@ -7,16 +8,18 @@ import Tile from './tile';
 export default class Game extends React.Component {
   constructor(props) {
     super(props);
+    let tiles = [
+      {
+        ...this.randomTile(),
+        x: 0,
+        y: 0,
+        neighbors: [null, null, null, null, null, null],
+      },
+    ];
     this.state = {
+      paths: GetPaths(tiles),
       currentPiece: { ...this.randomTile(), x: -1000, y: -1000 },
-      tiles: [
-        {
-          ...this.randomTile(),
-          x: 0,
-          y: 0,
-          connections: [null, null, null, null, null, null],
-        },
-      ],
+      tiles,
     };
   }
 
@@ -44,7 +47,7 @@ export default class Game extends React.Component {
       [1, -1],
     ];
     this.setState((prev) => {
-      let connections = [];
+      let neighbors = [];
       for (let side = 0; side < 6; side++) {
         let dir = directions[side];
         let targetX = spot.x + dir[0];
@@ -54,20 +57,22 @@ export default class Game extends React.Component {
           let otherTile = prev.tiles[i];
           if (otherTile.x != targetX || otherTile.y != targetY) continue;
           connected = i;
-          otherTile.connections[(side + 3) % 6] = prev.tiles.length;
+          otherTile.neighbors[(side + 3) % 6] = prev.tiles.length;
           break;
         }
-        connections.push(connected);
+        neighbors.push(connected);
       }
       let newPiece = {
         ...prev.currentPiece,
         x: spot.x,
         y: spot.y,
-        connections,
+        neighbors,
       };
+      let tiles = [...prev.tiles, newPiece];
       return {
+        paths: GetPaths(tiles),
         currentPiece: { ...this.randomTile(), x: -1000, y: -1000 },
-        tiles: [...prev.tiles, newPiece],
+        tiles,
       };
     });
   };
