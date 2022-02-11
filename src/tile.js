@@ -73,7 +73,7 @@ export default class Tile extends React.Component {
 
       lines.push(
         <text
-          text-anchor="middle"
+          textAnchor="middle"
           x={cx}
           y={cy + 6.9}
           style={{ font: 'bold 18px sans-serif' }}

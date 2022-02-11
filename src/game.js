@@ -9,7 +9,14 @@ export default class Game extends React.Component {
     super(props);
     this.state = {
       currentPiece: { ...this.randomTile(), x: -1000, y: -1000 },
-      tiles: [{ ...this.randomTile(), x: 0, y: 0 }],
+      tiles: [
+        {
+          ...this.randomTile(),
+          x: 0,
+          y: 0,
+          connections: [null, null, null, null, null, null],
+        },
+      ],
     };
   }
 
@@ -28,10 +35,39 @@ export default class Game extends React.Component {
 
   placePiece = (spot) => {
     if (this.state.currentPiece == null) return;
+    const directions = [
+      [1, 0],
+      [0, 1],
+      [-1, 1],
+      [-1, 0],
+      [0, -1],
+      [1, -1],
+    ];
     this.setState((prev) => {
+      let connections = [];
+      for (let side = 0; side < 6; side++) {
+        let dir = directions[side];
+        let targetX = spot.x + dir[0];
+        let targetY = spot.y + dir[1];
+        let connected = null;
+        for (let i in prev.tiles) {
+          let otherTile = prev.tiles[i];
+          if (otherTile.x != targetX || otherTile.y != targetY) continue;
+          connected = i;
+          otherTile.connections[(side + 3) % 6] = prev.tiles.length;
+          break;
+        }
+        connections.push(connected);
+      }
+      let newPiece = {
+        ...prev.currentPiece,
+        x: spot.x,
+        y: spot.y,
+        connections,
+      };
       return {
         currentPiece: { ...this.randomTile(), x: -1000, y: -1000 },
-        tiles: [...prev.tiles, { ...prev.currentPiece, x: spot.x, y: spot.y }],
+        tiles: [...prev.tiles, newPiece],
       };
     });
   };
