@@ -40,7 +40,16 @@ export default class PlayArea extends React.Component {
       y *= POLYGON_OFFSET;
       x += this.state.offset.x;
       y += this.state.offset.y;
-      tiles.push(<Tile key={i} lines={tile.lines} x={x} y={y} />);
+      tiles.push(
+        <Tile
+          key={i}
+          lines={tile.lines}
+          x={x}
+          y={y}
+          index={i}
+          pathData={this.props.pathData}
+        />
+      );
     }
     return (
       <div onMouseDown={this.click} className="playArea" ref={this.areaRef}>

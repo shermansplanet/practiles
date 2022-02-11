@@ -17,7 +17,7 @@ export default class Game extends React.Component {
       },
     ];
     this.state = {
-      paths: GetPaths(tiles),
+      pathData: GetPaths(tiles),
       currentPiece: { ...this.randomTile(), x: -1000, y: -1000 },
       tiles,
     };
@@ -70,7 +70,7 @@ export default class Game extends React.Component {
       };
       let tiles = [...prev.tiles, newPiece];
       return {
-        paths: GetPaths(tiles),
+        pathData: GetPaths(tiles),
         currentPiece: { ...this.randomTile(), x: -1000, y: -1000 },
         tiles,
       };
@@ -131,7 +131,11 @@ export default class Game extends React.Component {
     }
     return (
       <div className="fullscreen" onMouseMove={this.onMove}>
-        <PlayArea tiles={this.state.tiles} placePiece={this.placePiece} />
+        <PlayArea
+          tiles={this.state.tiles}
+          placePiece={this.placePiece}
+          pathData={this.state.pathData}
+        />
         {heldTile}
       </div>
     );

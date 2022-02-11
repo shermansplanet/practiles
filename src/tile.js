@@ -24,6 +24,17 @@ export default class Tile extends React.Component {
     for (let i = 0; i < 3; i++) {
       let i1 = linedata[i][0];
       let i2 = linedata[i][1];
+      let lineColor = fg;
+      let isLoop = false;
+
+      if (this.props.pathData != undefined) {
+        let key = this.props.index + '-' + i;
+        let pathIndex = this.props.pathData.pathsByLine[key];
+        isLoop = this.props.pathData.paths[pathIndex].loop;
+        if (isLoop) {
+          lineColor = '#f90';
+        }
+      }
 
       let a = (i1 * Math.PI) / 3;
       let x1 = Math.cos(a) * POLYGON_EDGE_RADIUS + POLYGON_EDGE_RADIUS;
@@ -48,7 +59,7 @@ export default class Tile extends React.Component {
           d={pathstring}
         />,
         <path
-          style={{ fill: 'none', stroke: fg, strokeWidth: 4 }}
+          style={{ fill: 'none', stroke: lineColor, strokeWidth: 4 }}
           d={pathstring}
         />
       );
@@ -67,10 +78,11 @@ export default class Tile extends React.Component {
           cx={cx}
           cy={cy}
           r="12"
-          style={{ fill: bg, stroke: fg, strokeWidth: 2 }}
+          style={{ fill: bg, stroke: lineColor, strokeWidth: 2 }}
         />
       );
 
+      if (isLoop) continue;
       lines.push(
         <text
           textAnchor="middle"

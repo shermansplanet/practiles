@@ -24,25 +24,19 @@ export function GetPaths(tiles) {
     }
   }
 
-  function randomColor() {
-    return `rgb(${Math.floor(Math.random() * 256)},
-    ${Math.floor(Math.random() * 256)},
-    ${Math.floor(Math.random() * 256)})`;
-  }
-
   let pathsByLine = {};
   let paths = [];
   for (let i in tiles) {
     for (let ii = 0; ii < 3; ii++) {
       let key = i + '-' + ii;
       if (key in pathsByLine) continue;
-      let path = { lines: {}, loop: true, color: randomColor() };
+      let path = { lines: {}, loop: true };
       getPathRecursive(i, ii, path);
-      paths.push(path);
       for (let k in path.lines) {
-        pathsByLine[k] = path;
+        pathsByLine[k] = paths.length;
       }
+      paths.push(path);
     }
   }
-  return paths;
+  return { paths, pathsByLine };
 }
