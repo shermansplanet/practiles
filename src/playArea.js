@@ -12,7 +12,7 @@ export default class PlayArea extends React.Component {
   trackMouse = (e) => {
     let y = Math.floor(e.clientY / POLYGON_OFFSET);
     let x = Math.floor((e.clientX / POLYGON_EDGE_RADIUS - y) / 2);
-    this.setState({ selectedSpot: { x, y } });
+    this.setState({ selectedSpot: { x, y }, offset: { x: 0, y: 0 } });
   };
 
   click = (e) => {

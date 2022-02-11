@@ -1,5 +1,5 @@
 import React from 'react';
-import { POLYGON_OFFSET, POLYGON_EDGE_RADIUS } from './consts';
+import { POLYGON_TIP_RADIUS, POLYGON_EDGE_RADIUS } from './consts';
 
 import PlayArea from './playArea';
 import Tile from './tile';
@@ -8,14 +8,33 @@ export default class Game extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentPiece: this.randomTile(),
+      currentPiece: { ...this.randomTile(), x: -1000, y: -1000 },
       tiles: [{ ...this.randomTile(), x: 0, y: 0 }],
     };
   }
 
   onMove = (e) => {
     if (this.state.currentPiece == null) return;
-    let cp = this.state.currentPiece;
+    this.setState((prev) => {
+      return {
+        currentPiece: {
+          ...prev.currentPiece,
+          x: e.clientX - POLYGON_EDGE_RADIUS,
+          y: e.clientY - POLYGON_TIP_RADIUS,
+        },
+      };
+    });
+  };
+
+  placePiece = (spot) => {
+    console.log('place');
+    if (this.state.currentPiece == null) return;
+    this.setState((prev) => {
+      return {
+        currentPiece: { ...this.randomTile(), x: -1000, y: -1000 },
+        tiles: [...prev.tiles, { ...prev.currentPiece, x: spot.x, y: spot.y }],
+      };
+    });
   };
 
   randomTile = () => {
@@ -48,7 +67,7 @@ export default class Game extends React.Component {
     }
     return (
       <div className="fullscreen" onMouseMove={this.onMove}>
-        <PlayArea tiles={this.state.tiles} />
+        <PlayArea tiles={this.state.tiles} placePiece={this.placePiece} />
         {heldTile}
       </div>
     );

@@ -87,6 +87,7 @@ export default class Tile extends React.Component {
         height={POLYGON_TIP_RADIUS * 2}
         width={POLYGON_EDGE_RADIUS * 2}
         style={{
+          pointerEvents: 'none',
           position: 'absolute',
           transform: `translate(${this.props.x}px, ${this.props.y}px)`,
         }}
