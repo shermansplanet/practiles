@@ -14,6 +14,7 @@ export default class PlayArea extends React.Component {
     this.state = { offset: { x: 0, y: 0 } };
   }
   click = (e) => {
+    if (!this.canPlace()) return;
     this.props.placePiece(this.getBasePosition());
   };
 
