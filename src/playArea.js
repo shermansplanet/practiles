@@ -5,6 +5,7 @@ import {
   POLYGON_TIP_RADIUS,
   POLYGON_EDGE_RADIUS,
 } from './consts';
+import { directions, pointstring } from './tileUtils';
 import Tile from './tile';
 
 export default class PlayArea extends React.Component {
@@ -13,16 +14,20 @@ export default class PlayArea extends React.Component {
     this.state = { offset: { x: 0, y: 0 } };
   }
   click = (e) => {
-    let y = Math.floor(
+    this.props.placePiece(this.getBasePosition());
+  };
+
+  getBasePosition = () => {
+    let y = Math.round(
       (this.props.placementPosition.y - this.state.offset.y) / POLYGON_OFFSET
     );
-    let x = Math.floor(
+    let x = Math.round(
       ((this.props.placementPosition.x - this.state.offset.x) /
         POLYGON_EDGE_RADIUS -
         y) /
         2
     );
-    this.props.placePiece({ x, y });
+    return { x, y };
   };
 
   areaRef = (ref) => {
@@ -34,9 +39,77 @@ export default class PlayArea extends React.Component {
     });
   };
 
+  canPlace = () => {
+    let cp = this.props.currentPiece;
+    if (cp == null) return false;
+    let tileData = this.props.tiles;
+    let pos = this.getBasePosition();
+    for (let tileToPlace of cp.tiles) {
+      let x = pos.x + tileToPlace.x;
+      let y = pos.y + tileToPlace.y;
+      for (let tile of tileData) {
+        if (tile.x == x && tile.y == y) {
+          return false;
+        }
+      }
+    }
+    let hasNeighbor = false;
+    for (let tileToPlace of cp.tiles) {
+      for (let d of directions) {
+        let x = pos.x + tileToPlace.x + d[0];
+        let y = pos.y + tileToPlace.y + d[1];
+        for (let tile of tileData) {
+          if (tile.x == x && tile.y == y) {
+            hasNeighbor = true;
+            break;
+          }
+        }
+        if (hasNeighbor) break;
+      }
+      if (hasNeighbor) break;
+    }
+    return hasNeighbor;
+  };
+
   render() {
     let tileData = this.props.tiles;
     let tiles = [];
+
+    let shadow = [];
+    if (this.canPlace()) {
+      let cp = this.props.currentPiece;
+      let pos = this.getBasePosition();
+      for (let i in cp.tiles) {
+        let tileToPlace = cp.tiles[i];
+        let x = pos.x + tileToPlace.x;
+        let y = pos.y + tileToPlace.y;
+        x = (x * 2 + y) * POLYGON_EDGE_RADIUS;
+        y *= POLYGON_OFFSET;
+        x += this.state.offset.x;
+        y += this.state.offset.y;
+        shadow.push(
+          <svg
+            key={'shadow' + i}
+            height={POLYGON_TIP_RADIUS * 2}
+            width={POLYGON_EDGE_RADIUS * 2}
+            style={{
+              pointerEvents: 'none',
+              position: 'absolute',
+              transform: `translate(${x}px, ${y}px)`,
+              //transitionDuration: '0.1s',
+            }}
+          >
+            <polygon
+              points={pointstring}
+              style={{
+                fill: '#0002',
+                stroke: 'none',
+              }}
+            />
+          </svg>
+        );
+      }
+    }
 
     for (var i in tileData) {
       let tile = tileData[i];
@@ -58,6 +131,7 @@ export default class PlayArea extends React.Component {
     }
     return (
       <div onMouseDown={this.click} className="playArea" ref={this.areaRef}>
+        {shadow}
         {tiles}
       </div>
     );

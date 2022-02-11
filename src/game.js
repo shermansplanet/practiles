@@ -1,11 +1,8 @@
 import React from 'react';
-import {
-  POLYGON_TIP_RADIUS,
-  POLYGON_OFFSET,
-  POLYGON_EDGE_RADIUS,
-} from './consts';
+import { POLYGON_OFFSET, POLYGON_EDGE_RADIUS } from './consts';
 
 import {
+  directions,
   GetPaths,
   GetRandomTile,
   GetRandomPiece,
@@ -28,7 +25,7 @@ export default class Game extends React.Component {
     ];
     this.state = {
       pathData: GetPaths(tiles),
-      currentPiece: GetRandomPiece(),
+      currentPiece: GetRandomPiece(3),
       mouseX: 0,
       mouseY: 0,
       tiles,
@@ -47,21 +44,13 @@ export default class Game extends React.Component {
 
   placePiece = (spot) => {
     if (this.state.currentPiece == null) return;
-    const directions = [
-      [1, 0],
-      [0, 1],
-      [-1, 1],
-      [-1, 0],
-      [0, -1],
-      [1, -1],
-    ];
     this.setState((prev) => {
       for (let tile of prev.currentPiece.tiles) {
         let neighbors = [];
         for (let side = 0; side < 6; side++) {
           let dir = directions[side];
-          let targetX = spot.x + dir[0];
-          let targetY = spot.y + dir[1];
+          let targetX = spot.x + tile.x + dir[0];
+          let targetY = spot.y + tile.y + dir[1];
           let connected = null;
           for (let i in prev.tiles) {
             let otherTile = prev.tiles[i];
@@ -72,6 +61,7 @@ export default class Game extends React.Component {
           }
           neighbors.push(connected);
         }
+        console.log(spot.x, tile.x, spot.y, tile.y);
         let newPiece = {
           ...tile,
           x: spot.x + tile.x,
@@ -82,7 +72,7 @@ export default class Game extends React.Component {
       }
       return {
         pathData: GetPaths(prev.tiles),
-        currentPiece: GetRandomPiece(),
+        currentPiece: GetRandomPiece(3),
         tiles: prev.tiles,
       };
     });
@@ -131,12 +121,13 @@ export default class Game extends React.Component {
         <PlayArea
           tiles={this.state.tiles}
           placePiece={this.placePiece}
+          currentPiece={this.state.currentPiece}
           pathData={this.state.pathData}
           placementPosition={
             cp == null
               ? { x: 0, y: 0 }
               : {
-                  c: this.state.mouseX - cp.centerX,
+                  x: this.state.mouseX - cp.centerX,
                   y: this.state.mouseY - cp.centerY,
                 }
           }

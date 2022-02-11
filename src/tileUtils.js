@@ -4,6 +4,26 @@ import {
   POLYGON_EDGE_RADIUS,
 } from './consts';
 
+var ps = '';
+for (let i = 0; i < 6; i++) {
+  let a = ((i + 0.5) * Math.PI) / 3;
+  let vertx = Math.cos(a) * (POLYGON_TIP_RADIUS - 1) + POLYGON_EDGE_RADIUS;
+  let verty = Math.sin(a) * (POLYGON_TIP_RADIUS - 1) + POLYGON_TIP_RADIUS;
+  let centerstring = vertx + ',' + verty + ' ';
+  ps += centerstring;
+}
+
+export const pointstring = ps;
+
+export const directions = [
+  [1, 0],
+  [0, 1],
+  [-1, 1],
+  [-1, 0],
+  [0, -1],
+  [1, -1],
+];
+
 export function GetPaths(tiles) {
   function getPathRecursive(tileIndex, lineIndex, path) {
     let key = tileIndex + '-' + lineIndex;
@@ -100,11 +120,48 @@ export function RotatePiece(piece) {
   return CenterPiece(piece);
 }
 
-export function GetRandomPiece() {
-  let tiles = [
-    { ...GetRandomTile(), x: 0, y: 0 },
-    { ...GetRandomTile(), x: 1, y: 0 },
-    { ...GetRandomTile(), x: 0, y: 1 },
-  ];
+function ArrayIncludes(arr, el) {
+  for (let a of arr) {
+    let matches = true;
+    for (let i in a) {
+      if (el[i] != a[i]) {
+        matches = false;
+        break;
+      }
+    }
+    if (matches) return true;
+  }
+  return false;
+}
+
+export function GetRandomPiece(tilecount) {
+  let tiles = [];
+  let takenPositions = [];
+  for (let i = 0; i < tilecount; i++) {
+    let tile = GetRandomTile();
+    if (i == 0) {
+      tile.x = 0;
+      tile.y = 0;
+    } else {
+      let possible = [];
+      for (let otherpos of takenPositions) {
+        for (let dir of directions) {
+          let x = otherpos[0] + dir[0];
+          let y = otherpos[1] + dir[1];
+          if (
+            ArrayIncludes(takenPositions, [x, y]) ||
+            ArrayIncludes(possible, [x, y])
+          )
+            continue;
+          possible.push([x, y]);
+        }
+      }
+      let pos = possible[Math.floor(Math.random() * possible.length)];
+      tile.x = pos[0];
+      tile.y = pos[1];
+    }
+    takenPositions.push([tile.x, tile.y]);
+    tiles.push(tile);
+  }
   return CenterPiece({ tiles });
 }

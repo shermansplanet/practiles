@@ -1,4 +1,5 @@
 import { POLYGON_TIP_RADIUS, POLYGON_EDGE_RADIUS } from './consts';
+import { pointstring } from './tileUtils';
 import React from 'react';
 export default class Tile extends React.Component {
   constructor(props) {
@@ -7,19 +8,10 @@ export default class Tile extends React.Component {
   }
 
   render() {
-    let pointstring = '';
     let linedata = this.props.lines;
     let lines = [];
     const bg = 'white';
     const fg = '#555';
-
-    for (let i = 0; i < 6; i++) {
-      let a = ((i + 0.5) * Math.PI) / 3;
-      let vertx = Math.cos(a) * (POLYGON_TIP_RADIUS - 1) + POLYGON_EDGE_RADIUS;
-      let verty = Math.sin(a) * (POLYGON_TIP_RADIUS - 1) + POLYGON_TIP_RADIUS;
-      let centerstring = vertx + ',' + verty + ' ';
-      pointstring += centerstring;
-    }
 
     for (let i = 0; i < 3; i++) {
       let i1 = linedata[i][0];
