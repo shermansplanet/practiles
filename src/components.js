@@ -95,12 +95,13 @@ export const components = {
   '🔌': { name: 'Wires', p: [], s: ['⚙️'] },
   '🔎': { name: 'Lens', p: [], s: ['🔆'] },
   '👺': { name: 'Mask', p: [], s: ['🌀'] },
-  '🦠': { name: 'Industrial Waste', p: [], s: ['💩'] },
+  '🦠': { name: 'Foul Waste', p: [], s: ['💩'] },
   '💍': { name: 'Ring', p: [], s: ['✨'] },
   '🔒': { name: 'Lock', p: [], s: ['🧶'] },
   '🛼': { name: 'Roller Skates', p: [], s: ['🗝'] },
 
   '🛹': { name: 'Skateboard', p: [], s: ['🗝'] },
+  '⚱️': { name: 'Funerary Urn', p: [], s: ['💀'] },
 
   // 2 POWER
   '💥': { name: 'Combustion Elemental', p: ['🔥', '🔥'], s: [] },
@@ -109,12 +110,12 @@ export const components = {
   '⛰': { name: 'Mountain Elemental', p: ['🪨', '🪨'], s: [] },
   '🥩': { name: 'Divine Flesh', p: ['🩸', '🩸'], s: [] },
   '🍎': { name: 'Apple of Vitality', p: ['🌿', '🩸'], s: [] },
-  '⚱️': { name: 'Funerary Urn', p: ['💀', '💀'], s: [] },
   '🔮': { name: 'Crystal Ball', p: ['🔆', '🔆'], s: [] },
 
   '🌋': { name: 'Volcano Elemental', p: ['🪨', '🔥'], s: [] },
   '👻': { name: 'Flickering Echo', p: ['🌀', '💀'], s: [] },
   '👾': { name: 'Digital Construct', p: ['⚙️', '⚙️'], s: [] },
+  '🗡': { name: 'Cursed Dagger', p: ['💀', '💀'], s: [] },
 
   // 1 POWER, 1 STRUCTURE
   '🪦': { name: 'Tombstone', p: ['💀'], s: ['🪨'] },
@@ -130,5 +131,5 @@ export const components = {
   '🪡': { name: 'Needle and Thread', p: ['🧶'], s: ['🧶'] },
   '👑': { name: 'Crown', p: ['✨'], s: ['✨'] },
   '💄': { name: 'Expensive Lipstick', p: ['✨'], s: ['🌀'] },
-  '🤡': { name: 'Clown Face', p: ['💩'], s: ['🌀'] },
+  '🤡': { name: 'Clown Mask', p: ['💩'], s: ['🌀'] },
 };

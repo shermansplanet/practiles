@@ -134,6 +134,8 @@ export default class PlayArea extends React.Component {
       }
     }
 
+    let tilePositions = [];
+
     for (var i in tileData) {
       let tile = tileData[i];
       let y = tile.y;
@@ -151,7 +153,22 @@ export default class PlayArea extends React.Component {
           pathData={this.props.pathData}
         />
       );
+      tilePositions.push({ x, y });
     }
+
+    let summons = [];
+    for (let i in this.props.summons) {
+      let summon = this.props.summons[i];
+      let pos = tilePositions[summon.tileIndex];
+      summons.push(
+        <Summon
+          key={'summon_' + i + JSON.stringify(pos)}
+          data={summon}
+          pos={pos}
+        />
+      );
+    }
+
     return (
       <div
         onMouseDown={this.click}
@@ -171,6 +188,7 @@ export default class PlayArea extends React.Component {
       >
         {shadow}
         {tiles}
+        {summons}
       </div>
     );
   }

@@ -10,8 +10,29 @@
 .summon {
   position: absolute;
   background-color: white;
-  border: 2px solid black;
-  width: 30px;
-  height: 30px;
+  border: 4px solid #eee;
+  width: 32px;
+  height: 32px;
   border-radius: 100px;
+  transform: translate(-18px, -18px) scale(1);
+  box-shadow: 0px 5px 5px 0 #0005;
+  display: table;
+  transition-duration: 0.1s;
+}
+
+.summon:hover {
+  transform: translate(-18px, -18px) scale(2);
+}
+
+.summonEmoji {
+  user-select: none;
+  display: table-cell;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  vertical-align: middle;
+  text-align: center;
+  padding-top: 2px;
 }

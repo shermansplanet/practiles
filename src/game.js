@@ -129,9 +129,11 @@ export default class Game extends React.Component {
     let parts = [];
     let players = [];
     let extraLines = 0;
+    let tileIndex = 0;
     for (let k in path.lines) {
       let address = path.lines[k];
-      let tile = tiles[address[0]];
+      tileIndex = address[0];
+      let tile = tiles[tileIndex];
       if (tile.playerId != undefined) players.push(tile.playerId);
       let l = tile.lines[address[1]];
       if (l[2] == false) {
@@ -159,6 +161,7 @@ export default class Game extends React.Component {
       players,
       structure: sTypes.length,
       power: pTypes.length,
+      tileIndex,
     };
   };
 
@@ -216,6 +219,7 @@ export default class Game extends React.Component {
                   y: this.state.mouseY - cp.centerY,
                 }
           }
+          summons={this.state.summons}
         />
         <Sidebar
           key={'sidebar' + this.state.sidebarUpdateToggle}
