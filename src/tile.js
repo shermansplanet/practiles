@@ -63,6 +63,7 @@ export default class Tile extends React.Component {
 
       if (!linedata[i][2]) continue;
       const ci = i;
+      let comp = components[linedata[i][2]];
 
       let linelen = Math.min(Math.abs(i1 - i2), 6 - Math.abs(i1 - i2));
       let lerp2 = linelen == 1 ? 0.45 : 0.25;
@@ -89,7 +90,6 @@ export default class Tile extends React.Component {
       );
 
       if (this.state.inspect == ci) {
-        let comp = components[linedata[i][2]];
         infobox = (
           <div
             className="infobox"
@@ -100,7 +100,7 @@ export default class Tile extends React.Component {
             }}
           >
             {linedata[i][2]}
-            <b>{comp.name}</b>
+            <b> {comp.name}</b>
             {comp.p.length > 0 ? <div>Power: +{comp.p.join('')}</div> : null}
             {comp.s.length > 0 ? (
               <div>Structure: +{comp.s.join('')}</div>
