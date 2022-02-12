@@ -72,6 +72,28 @@ export default class Tile extends React.Component {
         x1 * (1 - lerp2 - lerp3) + POLYGON_EDGE_RADIUS * lerp2 + x2 * lerp3;
       let cy =
         y1 * (1 - lerp2 - lerp3) + POLYGON_TIP_RADIUS * lerp2 + y2 * lerp3;
+
+      for (
+        let ringlayer = 1;
+        ringlayer < comp.s.length + comp.p.length;
+        ringlayer++
+      ) {
+        lines.push(
+          <circle
+            key={'ring_' + i}
+            cx={cx}
+            cy={cy}
+            r={ringlayer * 4 + 12}
+            style={{
+              fill: 'none',
+              stroke: lineColor,
+              opacity: 0.8,
+              strokeWidth: 1,
+            }}
+          />
+        );
+      }
+
       lines.push(
         <circle
           onMouseEnter={() => this.setState({ inspect: ci })}

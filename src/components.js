@@ -107,11 +107,14 @@ export const components = {
   '🌊': { name: 'Tidal Elemental', p: ['💧', '💧'], s: [] },
   '🌪': { name: 'Vortex Elemental', p: ['💨', '💨'], s: [] },
   '⛰': { name: 'Mountain Elemental', p: ['🪨', '🪨'], s: [] },
+  '🥩': { name: 'Divine Flesh', p: ['🩸', '🩸'], s: [] },
+  '🍎': { name: 'Apple of Vitality', p: ['🌿', '🩸'], s: [] },
+  '⚱️': { name: 'Funerary Urn', p: ['💀', '💀'], s: [] },
+  '🔮': { name: 'Crystal Ball', p: ['🔆', '🔆'], s: [] },
+
   '🌋': { name: 'Volcano Elemental', p: ['🪨', '🔥'], s: [] },
   '👻': { name: 'Flickering Echo', p: ['🌀', '💀'], s: [] },
   '👾': { name: 'Digital Construct', p: ['⚙️', '⚙️'], s: [] },
-  '💄': { name: 'Expensive Lipstick', p: ['✨'], s: ['🌀'] },
-  '🤡': { name: 'Clown Face', p: ['💩'], s: ['🌀'] },
 
   // 1 POWER, 1 STRUCTURE
   '🪦': { name: 'Tombstone', p: ['💀'], s: ['🪨'] },
@@ -126,4 +129,6 @@ export const components = {
   '🧨': { name: 'Firecracker', p: ['🔥'], s: ['🔥'] },
   '🪡': { name: 'Needle and Thread', p: ['🧶'], s: ['🧶'] },
   '👑': { name: 'Crown', p: ['✨'], s: ['✨'] },
+  '💄': { name: 'Expensive Lipstick', p: ['✨'], s: ['🌀'] },
+  '🤡': { name: 'Clown Face', p: ['💩'], s: ['🌀'] },
 };

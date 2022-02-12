@@ -9,6 +9,8 @@ import {
   RotatePiece,
 } from './tileUtils';
 
+import { components } from './components';
+
 import PlayArea from './playArea';
 import Sidebar from './sidebar';
 import Tile from './tile';
@@ -24,12 +26,13 @@ export default class Game extends React.Component {
         neighbors: [null, null, null, null, null, null],
       },
     ];
+    let playerId = 'player_0';
     this.state = {
       sidebarPieces: [
-        GetRandomPiece(1),
-        GetRandomPiece(2),
-        GetRandomPiece(3),
-        GetRandomPiece(4),
+        GetRandomPiece(1, playerId),
+        GetRandomPiece(2, playerId),
+        GetRandomPiece(3, playerId),
+        GetRandomPiece(4, playerId),
       ],
       sidebarUpdateToggle: false,
       pathData: GetPaths(tiles),
@@ -38,6 +41,7 @@ export default class Game extends React.Component {
       mouseX: 0,
       mouseY: 0,
       tiles,
+      playerId,
     };
   }
 
@@ -87,17 +91,53 @@ export default class Game extends React.Component {
       }
       let sidebarPieces = prev.sidebarPieces;
       sidebarPieces[prev.currentPieceIndex] = GetRandomPiece(
-        prev.currentPieceIndex + 1
+        prev.currentPieceIndex + 1,
+        this.state.playerId
       );
+
+      let pathData = GetPaths(prev.tiles);
+      let summons = [];
+      for (let pathId in pathData.pathsById) {
+        let path = pathData.pathsById[pathId];
+        if (
+          path.loop &&
+          (!(pathId in prev.pathData.pathsById) ||
+            !prev.pathData.pathsById[pathId].loop)
+        ) {
+          summons.push(this.summonFromPath(path, prev.tiles));
+        }
+      }
+
+      console.log(summons);
+
       return {
         sidebarPieces,
-        pathData: GetPaths(prev.tiles),
+        pathData,
         currentPiece: null,
         currentPieceIndex: null,
         tiles: prev.tiles,
         sidebarUpdateToggle: !prev.sidebarUpdateToggle,
       };
     });
+  };
+
+  summonFromPath = (path, tiles) => {
+    let sTypes = [];
+    let pTypes = [];
+    let parts = [];
+    let players = [];
+    for (let k in path.lines) {
+      let address = path.lines[k];
+      let tile = tiles[address[0]];
+      if (tile.playerId != undefined) players.push(tile.playerId);
+      let l = tile.lines[address[1]];
+      if (l[2] == false) continue;
+      let c = components[l[2]];
+      sTypes.push(...c.s);
+      pTypes.push(...c.p);
+      parts.push(l[2]);
+    }
+    return { sTypes, pTypes, parts, players };
   };
 
   onkeypress = (e) => {

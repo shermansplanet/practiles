@@ -53,20 +53,22 @@ export function GetPaths(tiles) {
   }
 
   let pathsByLine = {};
+  let pathsById = {};
   let paths = [];
   for (let i in tiles) {
     for (let ii = 0; ii < 3; ii++) {
       let key = i + '-' + ii;
       if (key in pathsByLine) continue;
-      let path = { lines: {}, loop: true };
+      let path = { lines: {}, loop: true, id: key };
       getPathRecursive(i, ii, path);
       for (let k in path.lines) {
         pathsByLine[k] = paths.length;
       }
+      pathsById[key] = path;
       paths.push(path);
     }
   }
-  return { paths, pathsByLine };
+  return { paths, pathsByLine, pathsById };
 }
 
 export function GetRandomTile() {
@@ -129,7 +131,7 @@ function ArrayIncludes(arr, el) {
   return false;
 }
 
-export function GetRandomPiece(tilecount) {
+export function GetRandomPiece(tilecount, playerId) {
   let tiles = [];
   let takenPositions = [];
   let allLines = [];
@@ -156,6 +158,7 @@ export function GetRandomPiece(tilecount) {
       tile.x = pos[0];
       tile.y = pos[1];
     }
+    tile.playerId = playerId;
     allLines.push(...tile.lines);
     takenPositions.push([tile.x, tile.y]);
     tiles.push(tile);
