@@ -8,6 +8,7 @@ import {
 } from './consts';
 import { directions, pointstring } from './tileUtils';
 import Tile from './tile';
+import Summon from './summon';
 
 export default class PlayArea extends React.Component {
   constructor(props) {

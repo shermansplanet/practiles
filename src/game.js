@@ -42,6 +42,7 @@ export default class Game extends React.Component {
       mouseY: 0,
       tiles,
       playerId,
+      summons: [],
     };
   }
 
@@ -108,7 +109,7 @@ export default class Game extends React.Component {
         }
       }
 
-      console.log(summons);
+      prev.summons.push(...summons);
 
       return {
         sidebarPieces,
@@ -117,6 +118,7 @@ export default class Game extends React.Component {
         currentPieceIndex: null,
         tiles: prev.tiles,
         sidebarUpdateToggle: !prev.sidebarUpdateToggle,
+        summons: prev.summons,
       };
     });
   };
@@ -126,18 +128,38 @@ export default class Game extends React.Component {
     let pTypes = [];
     let parts = [];
     let players = [];
+    let extraLines = 0;
     for (let k in path.lines) {
       let address = path.lines[k];
       let tile = tiles[address[0]];
       if (tile.playerId != undefined) players.push(tile.playerId);
       let l = tile.lines[address[1]];
-      if (l[2] == false) continue;
+      if (l[2] == false) {
+        extraLines++;
+        continue;
+      }
       let c = components[l[2]];
       sTypes.push(...c.s);
       pTypes.push(...c.p);
       parts.push(l[2]);
     }
-    return { sTypes, pTypes, parts, players };
+
+    let bonus = Math.floor(extraLines / 3);
+    for (let n = 0; n < Math.ceil(bonus / 2); n++) {
+      sTypes.push('➰');
+    }
+    for (let n = 0; n < Math.floor(bonus / 2); n++) {
+      pTypes.push('➰');
+    }
+
+    return {
+      sTypes,
+      pTypes,
+      parts,
+      players,
+      structure: sTypes.length,
+      power: pTypes.length,
+    };
   };
 
   onkeypress = (e) => {
