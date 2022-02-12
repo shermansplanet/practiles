@@ -43,6 +43,9 @@ export default class Game extends React.Component {
       tiles,
       playerId,
       summons: [],
+      phase: 'place',
+      currentPlayer: playerId,
+      currentSummon: null,
     };
   }
 

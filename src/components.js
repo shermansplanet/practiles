@@ -94,13 +94,14 @@ export const components = {
   '🪵': { name: 'Wood', p: [], s: ['🌿'] },
   '🔌': { name: 'Wires', p: [], s: ['⚙️'] },
   '🔎': { name: 'Lens', p: [], s: ['🔆'] },
-  '👺': { name: 'Mask', p: [], s: ['🌀'] },
+  '👹': { name: 'Mask', p: [], s: ['🌀'] },
   '🦠': { name: 'Foul Waste', p: [], s: ['💩'] },
   '💍': { name: 'Ring', p: [], s: ['✨'] },
   '🔒': { name: 'Lock', p: [], s: ['🧶'] },
   '🛼': { name: 'Roller Skates', p: [], s: ['🗝'] },
 
   '🛹': { name: 'Skateboard', p: [], s: ['🗝'] },
+  '🚲': { name: 'Bicycle Wheel', p: [], s: ['🗝'] },
   '⚱️': { name: 'Funerary Urn', p: [], s: ['💀'] },
 
   // 2 POWER
@@ -116,6 +117,7 @@ export const components = {
   '👻': { name: 'Flickering Echo', p: ['🌀', '💀'], s: [] },
   '👾': { name: 'Digital Construct', p: ['⚙️', '⚙️'], s: [] },
   '🗡': { name: 'Cursed Dagger', p: ['💀', '💀'], s: [] },
+  '🦷': { name: 'Pulled Tooth', p: ['💀'], s: ['💩'] },
 
   // 1 POWER, 1 STRUCTURE
   '🪦': { name: 'Tombstone', p: ['💀'], s: ['🪨'] },
