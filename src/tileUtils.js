@@ -4,6 +4,8 @@ import {
   POLYGON_EDGE_RADIUS,
 } from './consts';
 
+import { components, elements } from './components';
+
 var ps = '';
 for (let i = 0; i < 6; i++) {
   let a = ((i + 0.5) * Math.PI) / 3;
@@ -68,7 +70,6 @@ export function GetPaths(tiles) {
 }
 
 export function GetRandomTile() {
-  const symbols = ['🔥', '💧', '🪨', '💨', '🌿', '⚙️', '☀️', '🌑', '🗝', '⛓'];
   let indices = [0, 1, 2, 3, 4, 5];
   let lines = [];
   for (let _ = 0; _ < 3; _++) {
@@ -78,13 +79,7 @@ export function GetRandomTile() {
       line.push(indices[randi]);
       indices.splice(randi, 1);
     }
-    line = [
-      ...line,
-      Math.random() > 0.25
-        ? false
-        : symbols[Math.floor(Math.random() * symbols.length)],
-    ];
-    lines.push(line);
+    lines.push([...line, false]);
   }
   return { lines };
 }
@@ -137,6 +132,7 @@ function ArrayIncludes(arr, el) {
 export function GetRandomPiece(tilecount) {
   let tiles = [];
   let takenPositions = [];
+  let allLines = [];
   for (let i = 0; i < tilecount; i++) {
     let tile = GetRandomTile();
     if (i == 0) {
@@ -160,8 +156,62 @@ export function GetRandomPiece(tilecount) {
       tile.x = pos[0];
       tile.y = pos[1];
     }
+    allLines.push(...tile.lines);
     takenPositions.push([tile.x, tile.y]);
     tiles.push(tile);
   }
+
+  function GetRemainder(sup, sub) {
+    for (let a of sub) {
+      if (sup.length == 0) return false;
+      let i = sup.indexOf(a);
+      if (i == -1) return false;
+      sup.splice(i, 1);
+    }
+    return true;
+  }
+  let allKeys = Object.keys(components);
+
+  function GetMatchingComponents(plist, slist, startIndex) {
+    let matches = [];
+    for (let i = startIndex; i < allKeys.length; i++) {
+      let ci = i;
+      let symbol = allKeys[i];
+      let component = components[symbol];
+      let pclone = [...plist];
+      let sclone = [...slist];
+      if (
+        GetRemainder(pclone, component.p) &&
+        GetRemainder(sclone, component.s)
+      ) {
+        if (pclone.length == 0 && sclone.length == 0) {
+          matches.push([symbol]);
+        } else {
+          for (let match of GetMatchingComponents(pclone, sclone, ci)) {
+            matches.push([symbol, ...match]);
+          }
+        }
+      }
+    }
+    return matches;
+  }
+
+  const symbolCount = 3;
+  let plist = [];
+  let slist = [];
+  for (let n = 0; n < symbolCount; n++) {
+    let s = elements[Math.floor(Math.random() * elements.length)];
+    (Math.random() < 0.4 ? slist : plist).push(s);
+  }
+
+  let componentLists = GetMatchingComponents(plist, slist, 0);
+  let cl = componentLists[Math.floor(Math.random() * componentLists.length)];
+
+  for (let s of cl) {
+    let lineIndex = Math.floor(Math.random() * allLines.length);
+    allLines[lineIndex][2] = s;
+    allLines.splice(lineIndex, 1);
+  }
+
   return CenterPiece({ tiles });
 }
