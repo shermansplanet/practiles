@@ -1,10 +1,11 @@
 import { POLYGON_TIP_RADIUS, POLYGON_EDGE_RADIUS } from './consts';
 import { pointstring } from './tileUtils';
+import { components } from './components';
 import React from 'react';
 export default class Tile extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { inspect: -1 };
   }
 
   render() {
@@ -12,6 +13,8 @@ export default class Tile extends React.Component {
     let lines = [];
     const bg = 'white';
     const fg = '#555';
+
+    let infobox = null;
 
     for (let i = 0; i < 3; i++) {
       let i1 = linedata[i][0];
@@ -59,6 +62,7 @@ export default class Tile extends React.Component {
       );
 
       if (!linedata[i][2]) continue;
+      const ci = i;
 
       let linelen = Math.min(Math.abs(i1 - i2), 6 - Math.abs(i1 - i2));
       let lerp2 = linelen == 1 ? 0.45 : 0.25;
@@ -69,13 +73,41 @@ export default class Tile extends React.Component {
         y1 * (1 - lerp2 - lerp3) + POLYGON_TIP_RADIUS * lerp2 + y2 * lerp3;
       lines.push(
         <circle
+          onMouseEnter={() => this.setState({ inspect: ci })}
+          onMouseLeave={() => this.setState({ inspect: -1 })}
           key={'circle_' + i}
           cx={cx}
           cy={cy}
           r="12"
-          style={{ fill: bg, stroke: lineColor, strokeWidth: 2 }}
+          style={{
+            fill: this.state.inspect == ci ? 'black' : bg,
+            stroke: lineColor,
+            zIndex: 1,
+            strokeWidth: 2,
+          }}
         />
       );
+
+      if (this.state.inspect == ci) {
+        let comp = components[linedata[i][2]];
+        infobox = (
+          <div
+            className="infobox"
+            style={{
+              transform: `translate(${cx + this.props.x}px, ${
+                cy + this.props.y
+              }px)`,
+            }}
+          >
+            {linedata[i][2]}
+            <b>{comp.name}</b>
+            {comp.p.length > 0 ? <div>Power: +{comp.p.join('')}</div> : null}
+            {comp.s.length > 0 ? (
+              <div>Structure: +{comp.s.join('')}</div>
+            ) : null}
+          </div>
+        );
+      }
 
       if (isLoop) continue;
       lines.push(
@@ -84,35 +116,38 @@ export default class Tile extends React.Component {
           textAnchor="middle"
           x={cx}
           y={cy + 6.9}
-          style={{ font: 'bold 18px sans-serif' }}
+          style={{ font: 'bold 18px sans-serif', pointerEvents: 'none' }}
         >
           {linedata[i][2]}
         </text>
       );
     }
     return (
-      <svg
-        height={POLYGON_TIP_RADIUS * 2}
-        width={POLYGON_EDGE_RADIUS * 2}
-        onMouseEnter={this.props.mouseEnterCb}
-        onClick={this.props.onClickCb}
-        style={{
-          pointerEvents: this.props.mouseEnterCb == undefined ? 'none' : '',
-          position: 'absolute',
-          transform: `translate(${this.props.x}px, ${this.props.y}px)`,
-          cursor: this.props.highlighted ? 'pointer' : 'default',
-        }}
-      >
-        <polygon
-          points={pointstring}
+      <div>
+        <svg
+          height={POLYGON_TIP_RADIUS * 2}
+          width={POLYGON_EDGE_RADIUS * 2}
+          onMouseEnter={this.props.mouseEnterCb}
+          onClick={this.props.onClickCb}
           style={{
-            fill: bg,
-            stroke: this.props.highlighted ? '#900' : '#ccc',
-            strokeWidth: this.props.highlighted ? 4 : 2,
+            pointerEvents: this.props.noInteraction ? 'none' : '',
+            position: 'absolute',
+            transform: `translate(${this.props.x}px, ${this.props.y}px)`,
+            cursor: this.props.highlighted ? 'pointer' : 'default',
           }}
-        />
-        {lines}
-      </svg>
+        >
+          <polygon
+            points={pointstring}
+            style={{
+              fill: bg,
+              stroke: this.props.highlighted ? '#900' : '#ccc',
+              strokeWidth: this.props.highlighted ? 4 : 2,
+            }}
+          />
+          {lines}
+        </svg>
+        {infobox}
+      </div>
     );
   }
 }

@@ -130,6 +130,7 @@ export default class Game extends React.Component {
         y *= POLYGON_OFFSET;
         heldTiles.push(
           <Tile
+            noInteraction={true}
             key={'heldTile_' + i}
             lines={tile.lines}
             x={x + this.state.mouseX - cp.centerX}
