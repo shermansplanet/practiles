@@ -147,6 +147,7 @@ export default class PlayArea extends React.Component {
         <Tile
           key={'tile_' + i}
           lines={tile.lines}
+          color={tile.color}
           x={x}
           y={y}
           index={i}

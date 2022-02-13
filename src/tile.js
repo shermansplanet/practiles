@@ -11,7 +11,7 @@ export default class Tile extends React.Component {
   render() {
     let linedata = this.props.lines;
     let lines = [];
-    const bg = 'white';
+    const bg = this.props.color || 'white';
     const fg = '#555';
 
     let infobox = null;
@@ -27,7 +27,7 @@ export default class Tile extends React.Component {
         let pathIndex = this.props.pathData.pathsByLine[key];
         isLoop = this.props.pathData.paths[pathIndex].loop;
         if (isLoop) {
-          lineColor = '#f90';
+          lineColor = '#900';
         }
       }
 
@@ -156,13 +156,14 @@ export default class Tile extends React.Component {
             position: 'absolute',
             transform: `translate(${this.props.x}px, ${this.props.y}px)`,
             cursor: this.props.highlighted ? 'pointer' : 'default',
+            opacity: this.props.inactive ? 0.5 : 1,
           }}
         >
           <polygon
             points={pointstring}
             style={{
               fill: bg,
-              stroke: this.props.highlighted ? '#900' : '#ccc',
+              stroke: this.props.highlighted ? '#900' : '#0003',
               strokeWidth: this.props.highlighted ? 4 : 2,
             }}
           />

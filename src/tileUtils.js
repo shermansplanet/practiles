@@ -131,7 +131,7 @@ function ArrayIncludes(arr, el) {
   return false;
 }
 
-export function GetRandomPiece(tilecount, playerId) {
+export function GetRandomPiece(tilecount, playerId, color) {
   let tiles = [];
   let takenPositions = [];
   let allLines = [];
@@ -158,6 +158,7 @@ export function GetRandomPiece(tilecount, playerId) {
       tile.x = pos[0];
       tile.y = pos[1];
     }
+    tile.color = color;
     tile.playerId = playerId;
     allLines.push(...tile.lines);
     takenPositions.push([tile.x, tile.y]);

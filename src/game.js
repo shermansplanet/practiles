@@ -18,6 +18,11 @@ import Tile from './tile';
 export default class Game extends React.Component {
   constructor(props) {
     super(props);
+    let playerId = 'player_0';
+    let game = {
+      playerOrder: [playerId],
+      players: { [playerId]: { color: '#bfa' } },
+    };
     let tiles = [
       {
         ...GetRandomTile(),
@@ -26,13 +31,12 @@ export default class Game extends React.Component {
         neighbors: [null, null, null, null, null, null],
       },
     ];
-    let playerId = 'player_0';
     this.state = {
       sidebarPieces: [
-        GetRandomPiece(1, playerId),
-        GetRandomPiece(2, playerId),
-        GetRandomPiece(3, playerId),
-        GetRandomPiece(4, playerId),
+        GetRandomPiece(1, playerId, game.players[playerId].color),
+        GetRandomPiece(2, playerId, game.players[playerId].color),
+        GetRandomPiece(3, playerId, game.players[playerId].color),
+        GetRandomPiece(4, playerId, game.players[playerId].color),
       ],
       sidebarUpdateToggle: false,
       pathData: GetPaths(tiles),
@@ -44,8 +48,9 @@ export default class Game extends React.Component {
       playerId,
       summons: [],
       phase: 'place',
-      currentPlayer: playerId,
+      currentPlayerIndex: 0,
       currentSummon: null,
+      game,
     };
   }
 
@@ -96,11 +101,12 @@ export default class Game extends React.Component {
       let sidebarPieces = prev.sidebarPieces;
       sidebarPieces[prev.currentPieceIndex] = GetRandomPiece(
         prev.currentPieceIndex + 1,
-        this.state.playerId
+        prev.playerId,
+        prev.game.players[prev.playerId].color
       );
 
       let pathData = GetPaths(prev.tiles);
-      let summons = [];
+      let summons = prev.summons;
       for (let pathId in pathData.pathsById) {
         let path = pathData.pathsById[pathId];
         if (
@@ -112,7 +118,20 @@ export default class Game extends React.Component {
         }
       }
 
-      prev.summons.push(...summons);
+      let currentPlayerIndex =
+        (prev.currentPlayerIndex + 1) % this.state.game.playerOrder.length;
+      let phase =
+        currentPlayerIndex == 0 && prev.summons.length > 0
+          ? 'command'
+          : 'place';
+
+      if (phase == 'command') {
+        for (let summon of summons) {
+          summon.controller =
+            summon.players[Math.floor(Math.random() * summon.players.length)];
+          summon.color = prev.game.players[summon.controller].color;
+        }
+      }
 
       return {
         sidebarPieces,
@@ -121,7 +140,10 @@ export default class Game extends React.Component {
         currentPieceIndex: null,
         tiles: prev.tiles,
         sidebarUpdateToggle: !prev.sidebarUpdateToggle,
-        summons: prev.summons,
+        summons,
+        phase,
+        currentPlayerIndex,
+        currentSummonIndex: 0,
       };
     });
   };
@@ -201,6 +223,7 @@ export default class Game extends React.Component {
             noInteraction={true}
             key={'heldTile_' + i}
             lines={tile.lines}
+            color={tile.color}
             x={x + this.state.mouseX - cp.centerX}
             y={y + this.state.mouseY - cp.centerY}
           />
@@ -225,6 +248,11 @@ export default class Game extends React.Component {
           summons={this.state.summons}
         />
         <Sidebar
+          active={
+            this.state.phase == 'place' &&
+            this.state.game.playerOrder[this.state.currentPlayerIndex] ==
+              this.state.playerId
+          }
           key={'sidebar' + this.state.sidebarUpdateToggle}
           pieces={this.state.sidebarPieces}
           select={this.select}

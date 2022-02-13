@@ -100,8 +100,10 @@ export default class Sidebar extends React.Component {
             lines={tile.lines}
             x={x}
             y={y}
-            mouseEnterCb={() => this.mouseover(pi)}
-            onClickCb={() => this.props.select(pi)}
+            color={tile.color}
+            inactive={!this.props.active}
+            mouseEnterCb={this.props.active ? () => this.mouseover(pi) : null}
+            onClickCb={this.props.active ? () => this.props.select(pi) : null}
           />
         );
       }
