@@ -21,7 +21,7 @@ export default class Game extends React.Component {
     let playerId = 'player_0';
     let game = {
       playerOrder: [playerId],
-      players: { [playerId]: { color: '#bfa' } },
+      players: { [playerId]: { color: '#cff' } },
     };
     let tiles = [
       {
@@ -49,7 +49,6 @@ export default class Game extends React.Component {
       summons: [],
       phase: 'place',
       currentPlayerIndex: 0,
-      currentSummon: null,
       game,
     };
   }
@@ -131,6 +130,28 @@ export default class Game extends React.Component {
             summon.players[Math.floor(Math.random() * summon.players.length)];
           summon.color = prev.game.players[summon.controller].color;
         }
+
+        for (let pathId in pathData.pathsById) {
+          let path = pathData.pathsById[pathId];
+          if (!path.loop) continue;
+
+          let connectedPaths = [pathId];
+          for (let lineKey in path.lines) {
+            let line = path.lines[lineKey];
+            let tile = prev.tiles[line[0]];
+            for (let i = 0; i < 3; i++) {
+              if (i == line[1]) continue;
+              let otherLine = tile.lines[i];
+              let dist = Math.abs(otherLine[0] - otherLine[1]);
+              if (dist == 1 || dist == 5) continue;
+              let pathKey = line[0] + '-' + i;
+              let id = pathData.paths[pathData.pathsByLine[pathKey]].id;
+              if (connectedPaths.includes(id)) continue;
+              connectedPaths.push(id);
+            }
+          }
+          path.connectedPaths = connectedPaths;
+        }
       }
 
       return {
@@ -179,7 +200,7 @@ export default class Game extends React.Component {
       pTypes.push('➰');
     }
 
-    return {
+    let summon = {
       sTypes,
       pTypes,
       parts,
@@ -187,7 +208,12 @@ export default class Game extends React.Component {
       structure: sTypes.length,
       power: pTypes.length,
       tileIndex,
+      path,
     };
+
+    path.summon = summon;
+
+    return summon;
   };
 
   onkeypress = (e) => {
@@ -246,6 +272,11 @@ export default class Game extends React.Component {
                 }
           }
           summons={this.state.summons}
+          activeSummon={
+            this.state.phase == 'place'
+              ? null
+              : this.state.summons[this.state.currentSummonIndex]
+          }
         />
         <Sidebar
           active={

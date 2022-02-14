@@ -48,6 +48,12 @@ export default class Tile extends React.Component {
           POLYGON_TIP_RADIUS * (1 - lerp) + y2 * lerp
         } ${x2},${y2}`;
 
+      let localLineColor =
+        this.props.highlightedLines != undefined &&
+        this.props.highlightedLines[i]
+          ? 'red'
+          : lineColor;
+
       lines.push(
         <path
           key={'outline_' + i}
@@ -56,7 +62,7 @@ export default class Tile extends React.Component {
         />,
         <path
           key={'line_' + i}
-          style={{ fill: 'none', stroke: lineColor, strokeWidth: 4 }}
+          style={{ fill: 'none', stroke: localLineColor, strokeWidth: 4 }}
           d={pathstring}
         />
       );

@@ -136,6 +136,20 @@ export default class PlayArea extends React.Component {
 
     let tilePositions = [];
 
+    let highlightedLines = [];
+    for (var i in tileData) {
+      highlightedLines.push([false, false, false]);
+    }
+    if (this.props.activeSummon != null) {
+      for (let pathId of this.props.activeSummon.path.connectedPaths) {
+        let lines = this.props.pathData.pathsById[pathId].lines;
+        for (let lineKey in lines) {
+          let line = lines[lineKey];
+          highlightedLines[line[0]][line[1]] = true;
+        }
+      }
+    }
+
     for (var i in tileData) {
       let tile = tileData[i];
       let y = tile.y;
@@ -152,6 +166,7 @@ export default class PlayArea extends React.Component {
           y={y}
           index={i}
           pathData={this.props.pathData}
+          highlightedLines={highlightedLines[i]}
         />
       );
       tilePositions.push({ x, y });
