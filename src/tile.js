@@ -51,7 +51,9 @@ export default class Tile extends React.Component {
       let localLineColor =
         this.props.highlightedLines != undefined &&
         this.props.highlightedLines[i]
-          ? 'red'
+          ? isLoop
+            ? 'red'
+            : '#f90'
           : lineColor;
 
       lines.push(
@@ -92,7 +94,7 @@ export default class Tile extends React.Component {
             r={ringlayer * 4 + 12}
             style={{
               fill: 'none',
-              stroke: lineColor,
+              stroke: localLineColor,
               opacity: 0.8,
               strokeWidth: 1,
             }}
@@ -110,7 +112,7 @@ export default class Tile extends React.Component {
           r="12"
           style={{
             fill: this.state.inspect == ci ? 'black' : bg,
-            stroke: lineColor,
+            stroke: localLineColor,
             zIndex: 1,
             strokeWidth: 2,
           }}

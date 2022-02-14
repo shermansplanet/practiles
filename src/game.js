@@ -139,11 +139,22 @@ export default class Game extends React.Component {
           for (let lineKey in path.lines) {
             let line = path.lines[lineKey];
             let tile = prev.tiles[line[0]];
+
+            let thisLine = tile.lines[line[1]];
+            let min = Math.min(thisLine[0], thisLine[1]);
+            let max = Math.max(thisLine[0], thisLine[1]);
+            let dist = max - min;
+            if (dist == 1 || dist == 5) continue;
+
             for (let i = 0; i < 3; i++) {
               if (i == line[1]) continue;
               let otherLine = tile.lines[i];
-              let dist = Math.abs(otherLine[0] - otherLine[1]);
-              if (dist == 1 || dist == 5) continue;
+              if (
+                (otherLine[0] < max && otherLine[0] > min) ==
+                (otherLine[1] < max && otherLine[1] > min)
+              )
+                continue;
+
               let pathKey = line[0] + '-' + i;
               let id = pathData.paths[pathData.pathsByLine[pathKey]].id;
               if (connectedPaths.includes(id)) continue;
