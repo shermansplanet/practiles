@@ -10,3 +10,31 @@
   align-items: stretch;
   align-content: stretch;
 }
+
+.textButton {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 18pt;
+  color: #900;
+}
+
+.textButton:hover {
+  color: red;
+}
+
+.playerList {
+  display: flex;
+  position: absolute;
+  left: 0;
+  right: 0;
+  align-items: center;
+  flex-direction: column;
+}
+
+.playerListElement {
+  font-size: 18pt;
+  display: flex;
+  align-items: center;
+  font-family: 'Merriweather';
+}
