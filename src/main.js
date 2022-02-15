@@ -1,9 +1,18 @@
 import Lobby from './lobby';
 import React from 'react';
-import { getDatabase, ref, set, get, push } from 'firebase/database';
+import {
+  getDatabase,
+  ref,
+  set,
+  onValue,
+  child,
+  remove,
+  off,
+} from 'firebase/database';
 export default class Main extends React.Component {
   constructor(props) {
     super(props);
+    this.closing = false;
 
     function getCookie(cname) {
       let name = cname + '=';
@@ -22,6 +31,7 @@ export default class Main extends React.Component {
     }
 
     let playerId = getCookie('playerId');
+    let x = document.cookie;
     if (playerId == '') {
       playerId = this.randomString(8);
       document.cookie = 'playerId=' + playerId;
@@ -33,25 +43,8 @@ export default class Main extends React.Component {
     const urlParams = new URLSearchParams(queryString);
 
     if (urlParams.has('game')) {
-      const gameId = urlParams.get('game');
-      const db = getDatabase();
-      const dbRef = ref(db, '/games/' + gameId);
-
-      get(dbRef)
-        .then((snapshot) => {
-          if (snapshot.exists()) {
-            this.setState({ loading: false, game: snapshot.val() });
-          } else {
-            this.setState({
-              loading: false,
-              error: "That game doesn't exist!",
-            });
-          }
-        })
-        .catch((error) => {
-          this.setState({ error });
-        });
       this.state.loading = true;
+      this.subscribeToGame(urlParams.get('game'), playerId);
     }
   }
 
@@ -65,10 +58,42 @@ export default class Main extends React.Component {
 
   newGame = () => {
     const gameId = this.randomString(4);
-    const dbRef = ref(db, '/games/' + gameId);
-    const game = { mode: 'lobby' };
-    set(dbRef, game);
-    this.setState({ game });
+    const dbRef = ref(getDatabase(), '/games/' + gameId);
+    const game = { mode: 'lobby', id: gameId };
+    set(dbRef, game).then(() =>
+      this.subscribeToGame(gameId, this.state.playerId)
+    );
+  };
+
+  subscribeToGame = async (gameId, playerId) => {
+    const dbRef = ref(getDatabase(), '/games/' + gameId);
+    onValue(dbRef, (snapshot) => {
+      if (this.closing) return;
+      if (snapshot.exists()) {
+        let game = snapshot.val();
+        if (game.players == undefined || game.players[playerId] == undefined) {
+          set(child(dbRef, `players/${playerId}`), {
+            order:
+              game.players == undefined ? 0 : Object.keys(game.players).length,
+          });
+
+          window.onbeforeunload = () => {
+            if (game.mode == 'lobby') {
+              this.closing = true;
+              remove(child(dbRef, `players/${playerId}`));
+            }
+            return null;
+          };
+        } else {
+          this.setState({ loading: false, game });
+        }
+      } else {
+        this.setState({
+          loading: false,
+          error: "That game doesn't exist!",
+        });
+      }
+    });
   };
 
   render() {
@@ -81,6 +106,6 @@ export default class Main extends React.Component {
     if (this.state.game == null) {
       return <button onClick={this.newGame}>NEW GAME</button>;
     }
-    return <Lobby />;
+    return <Lobby game={this.state.game} />;
   }
 }

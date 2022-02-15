@@ -4,5 +4,19 @@ export default class Lobby extends React.Component {
     super(props);
     this.state = {};
   }
-  render() {}
+  render() {
+    let link = window.location.href;
+    if (!link.includes('?')) {
+      link = link + '?game=' + this.props.game.id;
+    }
+    let players = this.props.game.players;
+    let playerList = Object.keys(players);
+    playerList.sort((a, b) => players[a] - players[b]);
+    return (
+      <div>
+        <div>{playerList}</div>
+        <a href={link}>{link}</a>
+      </div>
+    );
+  }
 }
