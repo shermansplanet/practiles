@@ -72,7 +72,12 @@ export default class Main extends React.Component {
       if (this.closing) return;
       if (snapshot.exists()) {
         let game = snapshot.val();
-        if (game.players == undefined || game.players[playerId] == undefined) {
+        if (
+          game.mode == 'lobby' &&
+          (game.players == undefined ||
+            (game.players[playerId] == undefined &&
+              Object.keys(game.players).length < 6))
+        ) {
           set(child(dbRef, `players/${playerId}`), {
             order:
               game.players == undefined ? 0 : Object.keys(game.players).length,

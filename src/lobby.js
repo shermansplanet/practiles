@@ -4,7 +4,7 @@ import { playerColors } from './consts';
 export default class Lobby extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { editing: false, name: '' };
+    this.state = { editing: false, name: '', hasCopied: false };
   }
   render() {
     let link = window.location.href;
@@ -21,6 +21,7 @@ export default class Lobby extends React.Component {
       const pid = playerList[i];
       playerDivs.push(
         <div
+          key={'playerList_' + i}
           className="playerListElement"
           style={
             i < playerColors.length
@@ -37,14 +38,15 @@ export default class Lobby extends React.Component {
                 if (ref && ref.focus) ref.focus();
               }}
               value={this.state.name}
-              onChange={(e) => this.setState({ name: e.target.value })}
+              onChange={(e) =>
+                this.setState({ name: e.target.value.substring(0, 20) })
+              }
             />
           ) : (
             players[pid].name || `Player ${parseInt(i) + 1}`
           )}
           {pid == this.props.playerId ? (
             <button
-              style={{ marginRight: '-30px' }}
               className="textButton"
               onClick={() => {
                 if (this.state.editing) {
@@ -96,15 +98,20 @@ export default class Lobby extends React.Component {
     }
 
     return (
-      <div className="playerList">
-        {playerDivs}
+      <div>
+        <div className="playerList">{playerDivs}</div>
         <div>
           Game Link:
           <a style={{ margin: '6px' }} href={link}>
             {link}
           </a>
-          <button onClick={() => fallbackCopyTextToClipboard(link)}>
-            Copy
+          <button
+            onClick={() => {
+              fallbackCopyTextToClipboard(link);
+              this.setState({ hasCopied: true });
+            }}
+          >
+            {this.state.hasCopied ? 'Copied!' : 'Copy'}
           </button>
         </div>
       </div>

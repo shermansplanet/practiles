@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Roboto+Condensed:ital,wght@0,300;0,400;1,300;1,400&family=Share+Tech+Mono&display=swap');
 
+body {
+  font-family: 'Merriweather';
+}
+
 .fullscreen {
   position: fixed;
   left: 0;
@@ -11,10 +15,13 @@
   align-content: stretch;
 }
 
+button {
+  cursor: pointer;
+}
+
 .textButton {
   border: none;
   background: none;
-  cursor: pointer;
   font-size: 18pt;
   color: #900;
 }
@@ -25,12 +32,8 @@
 
 .playerList {
   display: flex;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
   align-items: center;
-  flex-direction: column;
+  flex-wrap: wrap;
 }
 
 .playerListElement {
