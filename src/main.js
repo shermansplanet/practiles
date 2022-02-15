@@ -1,6 +1,6 @@
 import Lobby from './lobby';
 import React from 'react';
-import { getDatabase, ref, onValue, get, push } from 'firebase/database';
+import { getDatabase, ref, set, get, push } from 'firebase/database';
 export default class Main extends React.Component {
   constructor(props) {
     super(props);
@@ -63,7 +63,13 @@ export default class Main extends React.Component {
     return s;
   };
 
-  newGame = () => {};
+  newGame = () => {
+    const gameId = this.randomString(4);
+    const dbRef = ref(db, '/games/' + gameId);
+    const game = { mode: 'lobby' };
+    set(dbRef, game);
+    this.setState({ game });
+  };
 
   render() {
     if (this.state.loading) {
@@ -73,7 +79,7 @@ export default class Main extends React.Component {
       return <div>{this.state.error}</div>;
     }
     if (this.state.game == null) {
-      return <button>NEW GAME</button>;
+      return <button onClick={this.newGame}>NEW GAME</button>;
     }
     return <Lobby />;
   }
