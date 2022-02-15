@@ -38,16 +38,20 @@ export default class Main extends React.Component {
       get(dbRef)
         .then((snapshot) => {
           if (snapshot.exists()) {
-            console.log(snapshot.val());
+            this.setState({ loading: false, game: snapshot.val() });
           } else {
-            this.setState({ error: "That game doesn't exist!" });
+            this.setState({
+              loading: false,
+              error: "That game doesn't exist!",
+            });
           }
         })
         .catch((error) => {
           this.setState({ error });
         });
+      this.state = { loading: true, error: null };
     } else {
-      this.state = { error: null };
+      this.state = { loading: false, error: null, game: null };
     }
   }
 
@@ -60,9 +64,15 @@ export default class Main extends React.Component {
   };
 
   render() {
+    if (this.state.loading) {
+      return <div>LOADING...</div>;
+    }
     if (this.state.error != null) {
       return <div>{this.state.error}</div>;
     }
-    return <div />;
+    if (this.state.game == null) {
+      return <button>NEW GAME</button>;
+    }
+    return <Lobby />;
   }
 }

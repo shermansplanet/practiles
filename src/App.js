@@ -3,7 +3,7 @@ import './style.css';
 import './playAreaStyle.css';
 import './sidebarStyle.css';
 
-import Game from './game';
+import Main from './main';
 
 import { initializeApp } from 'firebase/app';
 
@@ -19,5 +19,5 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 export default function App() {
-  return <Game />;
+  return <Main />;
 }
