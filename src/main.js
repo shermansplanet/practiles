@@ -118,6 +118,6 @@ export default class Main extends React.Component {
     if (this.state.game == null) {
       return <button onClick={this.newGame}>NEW GAME</button>;
     }
-    return <Lobby game={this.state.game} />;
+    return <Lobby game={this.state.game} playerId={this.state.playerId} />;
   }
 }
