@@ -1,5 +1,6 @@
 import React from 'react';
 import { getDatabase, set, ref } from 'firebase/database';
+import { playerColors } from './consts';
 export default class Lobby extends React.Component {
   constructor(props) {
     super(props);
@@ -19,7 +20,17 @@ export default class Lobby extends React.Component {
     for (let i in playerList) {
       const pid = playerList[i];
       playerDivs.push(
-        <div className="playerListElement">
+        <div
+          className="playerListElement"
+          style={
+            i < playerColors.length
+              ? {
+                  backgroundColor: playerColors[i][0],
+                  borderColor: playerColors[i][1],
+                }
+              : null
+          }
+        >
           {pid == this.props.playerId && this.state.editing ? (
             <input
               ref={(ref) => {
