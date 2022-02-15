@@ -13,6 +13,7 @@ export default class Main extends React.Component {
   constructor(props) {
     super(props);
     this.closing = false;
+    this.initialized = false;
 
     function getCookie(cname) {
       let name = cname + '=';
@@ -46,6 +47,7 @@ export default class Main extends React.Component {
       this.state.loading = true;
       this.subscribeToGame(urlParams.get('game'), playerId);
     }
+    this.initialized = true;
   }
 
   randomString = (length) => {
@@ -85,13 +87,23 @@ export default class Main extends React.Component {
             return null;
           };
         } else {
-          this.setState({ loading: false, game });
+          if (this.initialized) {
+            this.setState({ loading: false, game });
+          } else {
+            this.state.loading = false;
+            this.state.game = game;
+          }
         }
       } else {
-        this.setState({
-          loading: false,
-          error: "That game doesn't exist!",
-        });
+        if (this.initialized) {
+          this.setState({
+            loading: false,
+            error: "That game doesn't exist!",
+          });
+        } else {
+          this.state.loading = false;
+          this.state.error = "That game doesn't exist!";
+        }
       }
     });
   };
