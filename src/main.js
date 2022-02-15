@@ -27,13 +27,15 @@ export default class Main extends React.Component {
       document.cookie = 'playerId=' + playerId;
     }
 
+    this.state = { playerId, error: null, loading: false, game: null };
+
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
 
     if (urlParams.has('game')) {
       const gameId = urlParams.get('game');
       const db = getDatabase();
-      const dbref = ref(db, '/games/' + gameId);
+      const dbRef = ref(db, '/games/' + gameId);
 
       get(dbRef)
         .then((snapshot) => {
@@ -49,9 +51,7 @@ export default class Main extends React.Component {
         .catch((error) => {
           this.setState({ error });
         });
-      this.state = { loading: true, error: null };
-    } else {
-      this.state = { loading: false, error: null, game: null };
+      this.state.loading = true;
     }
   }
 
@@ -62,6 +62,8 @@ export default class Main extends React.Component {
     }
     return s;
   };
+
+  newGame = () => {};
 
   render() {
     if (this.state.loading) {
