@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Roboto+Condensed:ital,wght@0,300;0,400;1,300;1,400&family=Share+Tech+Mono&display=swap');
 
-body {
+body,
+button {
   font-family: 'Merriweather';
 }
 
@@ -17,6 +18,7 @@ body {
 
 button {
   cursor: pointer;
+  padding: 4px 8px;
 }
 
 .textButton {
@@ -40,7 +42,6 @@ button {
   font-size: 18pt;
   display: flex;
   align-items: center;
-  font-family: 'Merriweather';
   margin: 6px;
   padding: 6px;
   border-radius: 6px;

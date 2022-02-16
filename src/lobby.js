@@ -1,6 +1,8 @@
 import React from 'react';
 import { getDatabase, set, ref } from 'firebase/database';
 import { playerColors } from './consts';
+import DirectionIndicator from './directionIndicator';
+
 export default class Lobby extends React.Component {
   constructor(props) {
     super(props);
@@ -100,6 +102,15 @@ export default class Lobby extends React.Component {
     return (
       <div>
         <div className="playerList">{playerDivs}</div>
+        <div style={{ display: 'flex', alignItems: 'center', margin: '8px' }}>
+          <DirectionIndicator
+            playerCount={Object.keys(this.props.game.players).length}
+          />
+          <div style={{ width: '300px', margin: '8px' }}>
+            <b>Player positions </b> (the direction an Other will have to attack
+            off the edge of the board to hit a player directly)
+          </div>
+        </div>
         <div>
           Game Link:
           <a style={{ margin: '6px' }} href={link}>
