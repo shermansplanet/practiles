@@ -25,7 +25,16 @@ function Batch(names, stats) {
 
 export const components = {
   ...Batch(
-    { '🐭': 'Mouse', '🐰': 'Hare', '🦊': 'Fox', '🐷': 'Pig' },
+    {
+      '🐭': 'Mouse',
+      '🐰': 'Hare',
+      '🦊': 'Fox',
+      '🐷': 'Pig',
+      '🐸': 'Frog',
+      '🐱': 'Cat',
+      '🐶': 'Dog',
+      '🐀': 'Rat',
+    },
     { p: ['🩸'], s: ['🩸'], isBase: true }
   ),
 
@@ -47,9 +56,16 @@ export const components = {
       '🦆': 'Duck',
       '🦉': 'Owl',
       '🦇': 'Bat',
-      '🦋': 'Butterfly',
     },
     { p: ['💨'], s: ['🩸'], isBase: true }
+  ),
+
+  ...Batch(
+    {
+      '🦋': 'Butterfly',
+      '🦚': 'Peacock',
+    },
+    { p: ['✨'], s: ['🩸'], isBase: true }
   ),
 
   ...Batch(
@@ -130,7 +146,7 @@ export const components = {
   '🎈': { name: 'Balloon', p: [], s: ['💨'] },
   '🧱': { name: 'Brick', p: [], s: ['🪨'] },
   '🫀': { name: 'Heart', p: [], s: ['🩸'] },
-  '🦴': { name: 'Bones', p: [], s: ['💀'] },
+  '🦴': { name: 'Bones', p: [], s: ['💀'], n: ['Skeleton'] },
   '🪵': { name: 'Wood', p: [], s: ['🌿'] },
   '🔌': { name: 'Wires', p: [], s: ['⚙️'] },
   '🔎': { name: 'Lens', p: [], s: ['🔆'] },
@@ -148,16 +164,43 @@ export const components = {
   '💥': { name: 'Combustion Elemental', p: ['🔥', '🔥'], s: [] },
   '🌊': { name: 'Tidal Elemental', p: ['💧', '💧'], s: [] },
   '🌪': { name: 'Vortex Elemental', p: ['💨', '💨'], s: [] },
+  '🌬': { name: 'Howling Winds', p: ['🌿', '💨'], s: [] },
+  '🌩': { name: 'Tempest Constituent', p: ['💧', '💨'], s: [] },
   '⛰': { name: 'Mountain Elemental', p: ['🪨', '🪨'], s: [] },
   '🥩': { name: 'Divine Flesh', p: ['🩸', '🩸'], s: [] },
   '🍎': { name: 'Apple of Vitality', p: ['🌿', '🩸'], s: [] },
-  '🔮': { name: 'Crystal Ball', p: ['🔆', '🔆'], s: [] },
+  '☂️': { name: 'Umbrella', p: ['⚙️'], s: ['💧'] },
 
   '🌋': { name: 'Volcano Elemental', p: ['🪨', '🔥'], s: [] },
   '👻': { name: 'Flickering Echo', p: ['🌀', '💀'], s: [] },
   '👾': { name: 'Digital Construct', p: ['⚙️', '⚙️'], s: [] },
   '🗡': { name: 'Cursed Dagger', p: ['💀', '💀'], s: [] },
-  '❤️‍🔥': { name: 'Vitae', p: ['🔥', '🩸'], s: [] },
+  '❤️‍🔥': {
+    name: 'Bottled Vitae',
+    p: ['🔥', '🩸'],
+    s: [],
+    isBase: 'Homunculus',
+  },
+  '🌟': {
+    name: 'Bottled Clarity',
+    p: ['💨', '🔆'],
+    s: [],
+    isBase: 'Homunculus',
+  },
+  '🪢': {
+    name: 'Bottled Connections',
+    p: ['💧', '🧶'],
+    s: [],
+    isBase: 'Homunculus',
+  },
+  '💰': { name: 'Bottled Value', p: ['🪨', '✨'], s: [], isBase: 'Homunculus' },
+
+  '🤯': { name: 'Epiphany Echo', p: ['🔆', '🔆'], s: [], isBase: 'Wraith' },
+  '🥶': { name: 'Hypothermic Echo', p: ['💀', '💧'], s: [], isBase: 'Wraith' },
+  '🤢': { name: 'Mutilated Echo', p: ['💩', '💀'], s: [], isBase: 'Wraith' },
+  '😁': { name: 'Bliss', p: ['🔆', '✨'], s: [] },
+  '🤐': { name: 'Silenced Echo', p: ['🌀', '🗝'], s: [], isBase: 'Wraith' },
+  '😍': { name: 'Infatuated Echo', p: ['🌀', '✨'], s: [], isBase: 'Wraith' },
 
   // 1 POWER, 1 STRUCTURE
   '🪦': { name: 'Tombstone', p: ['💀'], s: ['🪨'], isBase: 'Revenant' },
@@ -169,12 +212,36 @@ export const components = {
   '🧭': { name: 'Compass', p: ['⚙️'], s: ['🗝'] },
   '🧲': { name: 'Magnet', p: ['🧶'], s: ['⚙️'], a: ['Magnetic'] },
   '🤮': { name: 'Goblin Bile', p: ['💩'], s: ['💩'], a: ['Bilious'] },
-  '🧨': { name: 'Firecracker', p: ['🔥'], s: ['🔥'] },
+  '🧨': { name: 'Firecracker', p: ['🔥'], s: ['🔥'], a: ['Explosive'] },
   '🪡': { name: 'Needle and Thread', p: ['🧶'], s: ['🧶'] },
   '👑': { name: 'Crown', p: ['✨'], s: ['✨'], a: ['Crowned'] },
   '💄': { name: 'Expensive Lipstick', p: ['✨'], s: ['🌀'] },
-  '🤡': { name: 'Clown Mask', p: ['💩'], s: ['🌀'], isBase: 'Clown' },
+  '🤡': { name: 'Clown Mask', p: ['💩'], s: ['🌀'], n: ['Clown'] },
   '🦷': { name: 'Pulled Tooth', p: ['💩'], s: ['💀'], a: ['Tooth'] },
+  '🔮': { name: 'Crystal Ball', p: ['🔆'], s: ['🔆'], n: ['Crystal'] },
+  '🥸': { name: 'Spy Animus', p: ['🔆'], s: ['🌀'], n: ['Spy'] },
+  '🤩': { name: 'Fascination', p: ['🧶'], s: ['🔆'] },
+  '😡': { name: 'Enraged Echo', p: ['💀'], s: ['🔥'], isBase: 'Wraith' },
+  '🕷': { name: 'Spider', p: ['🧶'], s: ['🩸'] },
+  '🐈‍⬛': { name: 'Black Cat', p: ['🌀'], s: ['🩸'] },
+  '🍁': { name: 'Autumn Leaves', p: ['🌿'], s: ['💀'] },
+  '🌹': { name: 'Rose', p: ['🌿'], s: ['✨'] },
+  '🌻': { name: 'Sunflower', p: ['🌿'], s: ['🔆'] },
+  '🥀': { name: 'Withered Rose', p: ['🌿'], s: ['💀'] },
+  '🍄': { name: 'Mushroom', p: ['🩸'], s: ['💀'] },
+  '🪙': { name: 'Coin', p: ['🗝'], s: ['✨'] },
+  '☁️': { name: 'Impenetrable Fog', p: ['💨'], s: ['🌀'] },
+  '🌧': { name: 'Rainfall Spirit', p: ['💧'], s: ['🌿'], n: ['Rain'] },
+  '❄️': { name: 'Snowdrift Spirit', p: ['🧶'], s: ['💧'] },
+  '🍆': { name: 'Eggplant ;)', p: ['💩'], s: ['🌿'] },
+  '🍦': {
+    name: 'Ice Cream',
+    p: ['🩸'],
+    s: ['💧'],
+    a: ['Ice Cream'],
+    n: ['Ice Cream'],
+  },
+  '☕️': { name: 'Hot Tea', p: ['🩸'], s: ['🔥'] },
 };
 
 export function GetName(summon) {
@@ -231,8 +298,14 @@ export function GetName(summon) {
     }
   }
   if (structures.length > 0) {
-    let sparts = structures[0].name.split(' ');
-    words.push(sparts[sparts.length - 1]);
+    if (structures[0].n) {
+      words.push(
+        structures[0].n[Math.floor(Math.random() * structures[0].n.length)]
+      );
+    } else {
+      let sparts = structures[0].name.split(' ');
+      words.push(sparts[sparts.length - 1]);
+    }
   }
 
   words.push(otherType);
