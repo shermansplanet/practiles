@@ -36,7 +36,7 @@ export function GetPaths(tiles) {
       let dir = line[i];
       let oppositeDir = (dir + 3) % 6;
       let neighborTileIndex = tile.neighbors[dir];
-      if (neighborTileIndex == null) {
+      if (neighborTileIndex == -1) {
         path.loop = false;
         continue;
       }

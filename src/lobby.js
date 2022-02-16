@@ -33,7 +33,7 @@ export default class Lobby extends React.Component {
         ...GetRandomTile(),
         x: 0,
         y: 0,
-        neighbors: [null, null, null, null, null, null],
+        neighbors: [-1, -1, -1, -1, -1, -1],
       },
     ];
 

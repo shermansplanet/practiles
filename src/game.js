@@ -53,12 +53,12 @@ export default class Game extends React.Component {
         let dir = directions[side];
         let targetX = spot.x + tile.x + dir[0];
         let targetY = spot.y + tile.y + dir[1];
-        let connected = null;
-        for (let i in this.props.game.tiles) {
-          let otherTile = this.props.game.tiles[i];
+        let connected = -1;
+        for (let i in newtiles) {
+          let otherTile = newtiles[i];
           if (otherTile.x != targetX || otherTile.y != targetY) continue;
           connected = i;
-          otherTile.neighbors[(side + 3) % 6] = this.props.game.tiles.length;
+          otherTile.neighbors[(side + 3) % 6] = newtiles.length;
           break;
         }
         neighbors.push(connected);
@@ -80,7 +80,7 @@ export default class Game extends React.Component {
       thisPlayer.color
     );
 
-    let pathData = GetPaths(this.props.game.tiles);
+    let pathData = GetPaths(newtiles);
     let summons = this.props.game.summons || [];
     for (let pathId in pathData.pathsById) {
       let path = pathData.pathsById[pathId];
@@ -199,8 +199,6 @@ export default class Game extends React.Component {
       tileIndex,
       path,
     };
-
-    path.summon = summon;
 
     return summon;
   };
