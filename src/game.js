@@ -10,6 +10,7 @@ import { components, GetName } from './components';
 import PlayArea from './playArea';
 import Sidebar from './sidebar';
 import Tile from './tile';
+import DirectionIndicator from './directionIndicator';
 
 export default class Game extends React.Component {
   constructor(props) {
@@ -286,6 +287,7 @@ export default class Game extends React.Component {
           selectedIndex={this.props.game.currentPieceIndex}
           updateToggle={this.state.sidebarUpdateToggle}
         />
+        <DirectionIndicator playerCount={this.props.game.playerOrder.length} />
         {heldTiles}
       </div>
     );

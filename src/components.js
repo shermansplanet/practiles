@@ -194,6 +194,9 @@ export const components = {
     isBase: 'Homunculus',
   },
   '💰': { name: 'Bottled Value', p: ['🪨', '✨'], s: [], isBase: 'Homunculus' },
+  '🧂': { name: 'Salt', p: ['🩸', '🧶'], s: [] },
+  '🎟': { name: 'Lost Ticket', p: ['🗝', '🌀'], s: [] },
+  '🎭': { name: 'Theatrics', p: ['✨', '🌀'], s: [] },
 
   '🤯': { name: 'Epiphany Echo', p: ['🔆', '🔆'], s: [], isBase: 'Wraith' },
   '🥶': { name: 'Hypothermic Echo', p: ['💀', '💧'], s: [], isBase: 'Wraith' },
@@ -242,6 +245,10 @@ export const components = {
     n: ['Ice Cream'],
   },
   '☕️': { name: 'Hot Tea', p: ['🩸'], s: ['🔥'] },
+  '🏆': { name: 'Prized Trophy', p: ['✨'], s: ['✨'] },
+  '🎤': { name: 'Microphone', p: ['💨'], s: ['⚙️'] },
+  '💡': { name: 'Lightbulb', p: ['🔆'], s: ['⚙️'] },
+  '📺': { name: 'Television', p: ['⚙️'], s: ['🔆'] },
 };
 
 export function GetName(summon) {

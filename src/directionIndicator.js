@@ -40,7 +40,7 @@ export default class DirectionIndicator extends React.Component {
     }
 
     return (
-      <div>
+      <div style={{ zIndex: 100 }}>
         <svg height={POLYGON_TIP_RADIUS * 2} width={POLYGON_EDGE_RADIUS * 2}>
           {colorTris}
           <polygon
