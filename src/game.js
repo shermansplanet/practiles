@@ -288,6 +288,40 @@ export default class Game extends React.Component {
           updateToggle={this.state.sidebarUpdateToggle}
         />
         <DirectionIndicator playerCount={this.props.game.playerOrder.length} />
+        <div
+          style={{
+            zIndex: 100,
+            display: 'flex',
+            width: '500px',
+            flexWrap: 'wrap',
+            alignItems: 'flex-start',
+          }}
+        >
+          {this.props.game.playerOrder.map((val, i) => {
+            let player = this.props.game.players[val];
+            let selected =
+              this.props.game.phase == 'place'
+                ? this.props.game.currentPlayerIndex == i
+                : this.props.game.summons[this.props.game.currentSummonIndex]
+                    .controller == val;
+            return (
+              <div
+                key={'playerList_' + i}
+                className="playerListElement"
+                style={{
+                  backgroundColor: player.color,
+                  color: player.darkColor,
+                  borderColor: selected ? player.brightColor : player.darkColor,
+                  boxShadow: selected
+                    ? '0 0 20px 0 ' + player.brightColor
+                    : null,
+                }}
+              >
+                {this.props.game.players[val].name}
+              </div>
+            );
+          })}
+        </div>
         {heldTiles}
       </div>
     );

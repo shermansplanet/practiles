@@ -19,6 +19,9 @@ export default class Lobby extends React.Component {
     for (let i in playerOrder) {
       let playerId = playerOrder[i];
       let player = players[playerId];
+      if (!player.name) {
+        player.name = 'Player ' + (parseInt(i) + 1);
+      }
       player.color = playerColors[i][0];
       player.darkColor = playerColors[i][1];
       player.brightColor = playerColors[i][2];
