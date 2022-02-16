@@ -32,8 +32,8 @@ export default class PlayArea extends React.Component {
     this.setState((prev) => {
       return {
         offset: {
-          x: prev.offset.x + e.movementX,
-          y: prev.offset.y + e.movementY,
+          x: prev.offset.x + e.movementX / 2,
+          y: prev.offset.y + e.movementY / 2,
         },
       };
     });
