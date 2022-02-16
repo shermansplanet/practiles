@@ -103,7 +103,9 @@ export default class Game extends React.Component {
       for (let summon of summons) {
         summon.controller =
           summon.players[Math.floor(Math.random() * summon.players.length)];
-        summon.color = this.props.game.players[summon.controller].color;
+        let p = this.props.game.players[summon.controller];
+        summon.color = p.color;
+        summon.highlightColor = p.brightColor;
       }
 
       for (let pathId in pathData.pathsById) {
@@ -197,7 +199,7 @@ export default class Game extends React.Component {
       structure: sTypes.length,
       power: pTypes.length,
       tileIndex,
-      path,
+      pathId: path.id,
     };
 
     return summon;

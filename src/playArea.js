@@ -142,7 +142,9 @@ export default class PlayArea extends React.Component {
     }
     if (this.props.activeSummon != null) {
       let highlightColor = this.props.activeSummon.highlightColor;
-      for (let pathId of this.props.activeSummon.path.connectedPaths) {
+      let summonPath =
+        this.props.pathData.pathsById[this.props.activeSummon.pathId];
+      for (let pathId of summonPath.connectedPaths) {
         let lines = this.props.pathData.pathsById[pathId].lines;
         for (let lineKey in lines) {
           let line = lines[lineKey];
