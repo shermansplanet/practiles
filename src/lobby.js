@@ -125,6 +125,7 @@ export default class Lobby extends React.Component {
             {this.state.hasCopied ? 'Copied!' : 'Copy'}
           </button>
         </div>
+        <button className="bigButton">Start Game</button>
       </div>
     );
   }

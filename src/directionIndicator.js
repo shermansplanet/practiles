@@ -29,6 +29,7 @@ export default class DirectionIndicator extends React.Component {
 
       colorTris.push(
         <polygon
+          key={'poly' + i}
           points={`${vertx},${verty} ${vertx2},${verty2} ${POLYGON_EDGE_RADIUS},${POLYGON_TIP_RADIUS}`}
           style={{
             fill: playerColors[colorIndices[i]][0],

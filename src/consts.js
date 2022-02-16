@@ -16,9 +16,9 @@ export const playerColors = [
 export const colorMapping = [
   [null, null, null, null, null, null],
   [0, 0, 0, 0, 0, 0],
-  [0, 1, 0, 1, 0, 1],
-  [0, 1, 2, 0, 1, 2],
-  [null, 0, 1, null, 2, 3],
-  [null, 0, 1, 2, 3, 4],
-  [0, 1, 2, 3, 4, 5],
+  [1, 1, 0, 0, 0, 1],
+  [1, 2, 2, 0, 0, 1],
+  [null, 3, 2, null, 0, 1],
+  [2, 3, 4, null, 0, 1],
+  [2, 3, 4, 5, 0, 1],
 ];

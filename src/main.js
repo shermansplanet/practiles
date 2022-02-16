@@ -120,7 +120,11 @@ export default class Main extends React.Component {
       return <div>{this.state.error}</div>;
     }
     if (this.state.game == null) {
-      return <button onClick={this.newGame}>NEW GAME</button>;
+      return (
+        <button className="bigButton" onClick={this.newGame}>
+          NEW GAME
+        </button>
+      );
     }
     return <Lobby game={this.state.game} playerId={this.state.playerId} />;
   }
