@@ -85,7 +85,7 @@ export default class Main extends React.Component {
           });
 
           window.onbeforeunload = () => {
-            if (game.mode == 'lobby') {
+            if (this.state.game.mode == 'lobby') {
               this.closing = true;
               remove(child(dbRef, `players/${playerId}`));
             }
