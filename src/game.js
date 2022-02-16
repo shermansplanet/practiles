@@ -5,7 +5,7 @@ import { directions, GetPaths, GetRandomPiece, RotatePiece } from './tileUtils';
 
 import { getDatabase, ref, set } from 'firebase/database';
 
-import { components } from './components';
+import { components, GetName } from './components';
 
 import PlayArea from './playArea';
 import Sidebar from './sidebar';
@@ -201,6 +201,8 @@ export default class Game extends React.Component {
       tileIndex,
       pathId: path.id,
     };
+
+    summon.name = GetName(summon);
 
     return summon;
   };

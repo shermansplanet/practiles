@@ -21,7 +21,7 @@
 }
 
 .summon:hover {
-  transform: translate(-18px, -18px) scale(2);
+  transform: translate(-18px, -18px) scale(1.5);
 }
 
 .summonEmoji {
@@ -35,4 +35,16 @@
   vertical-align: middle;
   text-align: center;
   padding-top: 6px;
+}
+
+.summonDetails {
+  position: absolute;
+  width: 160px;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 6px;
+  padding: 6px;
+  transform: translate(-71px, 32px) scale(0.75);
+  transition-duration: 0.3s;
+  font-size: 10pt;
 }

@@ -118,7 +118,7 @@ export const components = {
     name: 'Escape Key',
     p: ['🗝'],
     s: [],
-    a: ['Evasive', 'Fleeting', 'Escape'],
+    a: ['Evasive', 'Swift', 'Escape'],
   },
 
   '☀️': { name: 'Sunlight', p: ['🔆'], s: [], a: ['Sun', 'Solar'] },
@@ -135,7 +135,7 @@ export const components = {
   '🔌': { name: 'Wires', p: [], s: ['⚙️'] },
   '🔎': { name: 'Lens', p: [], s: ['🔆'] },
   '👹': { name: 'Mask', p: [], s: ['🌀'] },
-  '🦠': { name: 'Foul Waste', p: [], s: ['💩'] },
+  '🦠': { name: 'Foul Waste', p: [], s: ['💩'], isBase: 'Goblin' },
   '💍': { name: 'Ring', p: [], s: ['✨'] },
   '🔒': { name: 'Lock', p: [], s: ['🧶'] },
   '🛼': { name: 'Roller Skates', p: [], s: ['🗝'] },
