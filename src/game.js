@@ -263,6 +263,7 @@ export default class Game extends React.Component {
                 }
           }
           summons={this.props.game.summons}
+          players={this.props.game.players}
           activeSummon={
             this.props.game.phase == 'place'
               ? null

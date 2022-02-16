@@ -141,11 +141,12 @@ export default class PlayArea extends React.Component {
       highlightedLines.push([false, false, false]);
     }
     if (this.props.activeSummon != null) {
+      let highlightColor = this.props.activeSummon.highlightColor;
       for (let pathId of this.props.activeSummon.path.connectedPaths) {
         let lines = this.props.pathData.pathsById[pathId].lines;
         for (let lineKey in lines) {
           let line = lines[lineKey];
-          highlightedLines[line[0]][line[1]] = true;
+          highlightedLines[line[0]][line[1]] = highlightColor;
         }
       }
     }

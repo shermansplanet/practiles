@@ -20,6 +20,8 @@ export default class Lobby extends React.Component {
       let playerId = playerOrder[i];
       let player = players[playerId];
       player.color = playerColors[i][0];
+      player.darkColor = playerColors[i][1];
+      player.brightColor = playerColors[i][2];
       player.sidebarPieces = [
         GetRandomPiece(1, playerId, player.color),
         GetRandomPiece(2, playerId, player.color),

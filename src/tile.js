@@ -26,9 +26,6 @@ export default class Tile extends React.Component {
         let key = this.props.index + '-' + i;
         let pathIndex = this.props.pathData.pathsByLine[key];
         isLoop = this.props.pathData.paths[pathIndex].loop;
-        if (isLoop) {
-          lineColor = '#900';
-        }
       }
 
       let a = (i1 * Math.PI) / 3;
@@ -51,20 +48,26 @@ export default class Tile extends React.Component {
       let localLineColor =
         this.props.highlightedLines != undefined &&
         this.props.highlightedLines[i]
-          ? isLoop
-            ? 'red'
-            : '#f90'
+          ? this.props.highlightedLines[i]
           : lineColor;
 
       lines.push(
         <path
           key={'outline_' + i}
-          style={{ fill: 'none', stroke: bg, strokeWidth: 8 }}
+          style={{
+            fill: 'none',
+            stroke: isLoop ? localLineColor : bg,
+            strokeWidth: 8,
+          }}
           d={pathstring}
         />,
         <path
           key={'line_' + i}
-          style={{ fill: 'none', stroke: localLineColor, strokeWidth: 4 }}
+          style={{
+            fill: 'none',
+            stroke: isLoop ? bg : localLineColor,
+            strokeWidth: isLoop ? 3 : 4,
+          }}
           d={pathstring}
         />
       );
