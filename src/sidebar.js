@@ -7,13 +7,14 @@ export default class Sidebar extends React.Component {
   constructor(props) {
     super(props);
     this.state = { offset: { x: 0, y: 0 }, highlightedPiece: null };
-    this.updatePositions();
+    if (this.props.pieces.length > 0) this.updatePositions();
   }
 
   componentDidUpdate(prevProps) {
     if (
+      this.props.pieces.length > 0 &&
       JSON.stringify(this.props.updateToggle) !==
-      JSON.stringify(prevProps.updateToggle)
+        JSON.stringify(prevProps.updateToggle)
     )
       this.updatePositions();
   }

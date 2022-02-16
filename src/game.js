@@ -245,7 +245,7 @@ export default class Game extends React.Component {
     }
 
     let thisPlayer = this.props.game.players[this.props.playerId];
-    let sidebarPieces = thisPlayer.sidebarPieces;
+    let sidebarPieces = thisPlayer == undefined ? [] : thisPlayer.sidebarPieces;
 
     return (
       <div className="fullscreen" onMouseMove={this.onMove}>
