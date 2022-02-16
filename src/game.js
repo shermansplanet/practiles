@@ -1,13 +1,9 @@
 import React from 'react';
 import { POLYGON_OFFSET, POLYGON_EDGE_RADIUS } from './consts';
 
-import {
-  directions,
-  GetPaths,
-  GetRandomTile,
-  GetRandomPiece,
-  RotatePiece,
-} from './tileUtils';
+import { directions, GetPaths, GetRandomPiece, RotatePiece } from './tileUtils';
+
+import { getDatabase, ref, set } from 'firebase/database';
 
 import { components } from './components';
 
@@ -18,38 +14,12 @@ import Tile from './tile';
 export default class Game extends React.Component {
   constructor(props) {
     super(props);
-    let playerId = 'player_0';
-    let game = {
-      playerOrder: [playerId],
-      players: { [playerId]: { color: '#cff' } },
-    };
-    let tiles = [
-      {
-        ...GetRandomTile(),
-        x: 0,
-        y: 0,
-        neighbors: [null, null, null, null, null, null],
-      },
-    ];
     this.state = {
-      sidebarPieces: [
-        GetRandomPiece(1, playerId, game.players[playerId].color),
-        GetRandomPiece(2, playerId, game.players[playerId].color),
-        GetRandomPiece(3, playerId, game.players[playerId].color),
-        GetRandomPiece(4, playerId, game.players[playerId].color),
-      ],
       sidebarUpdateToggle: false,
-      pathData: GetPaths(tiles),
       currentPiece: null,
       currentPieceIndex: null,
       mouseX: 0,
       mouseY: 0,
-      tiles,
-      playerId,
-      summons: [],
-      phase: 'place',
-      currentPlayerIndex: 0,
-      game,
     };
   }
 
@@ -61,122 +31,130 @@ export default class Game extends React.Component {
   };
 
   select = (pieceIndex) => {
+    let thisPlayer = this.props.game.players[this.props.playerId];
+    let sidebarPieces = thisPlayer.sidebarPieces;
+
     this.setState({
       currentPieceIndex: parseInt(pieceIndex),
       currentPiece:
         pieceIndex == null
           ? null
-          : JSON.parse(JSON.stringify(this.state.sidebarPieces[pieceIndex])),
+          : JSON.parse(JSON.stringify(sidebarPieces[pieceIndex])),
     });
   };
 
   placePiece = (spot) => {
     if (this.state.currentPiece == null) return;
-    this.setState((prev) => {
-      for (let tile of prev.currentPiece.tiles) {
-        let neighbors = [];
-        for (let side = 0; side < 6; side++) {
-          let dir = directions[side];
-          let targetX = spot.x + tile.x + dir[0];
-          let targetY = spot.y + tile.y + dir[1];
-          let connected = null;
-          for (let i in prev.tiles) {
-            let otherTile = prev.tiles[i];
-            if (otherTile.x != targetX || otherTile.y != targetY) continue;
-            connected = i;
-            otherTile.neighbors[(side + 3) % 6] = prev.tiles.length;
-            break;
-          }
-          neighbors.push(connected);
-        }
-        let newPiece = {
-          ...tile,
-          x: spot.x + tile.x,
-          y: spot.y + tile.y,
-          neighbors,
-        };
-        prev.tiles.push(newPiece);
-      }
-      let sidebarPieces = prev.sidebarPieces;
-      sidebarPieces[prev.currentPieceIndex] = GetRandomPiece(
-        prev.currentPieceIndex + 1,
-        prev.playerId,
-        prev.game.players[prev.playerId].color
-      );
 
-      let pathData = GetPaths(prev.tiles);
-      let summons = prev.summons;
+    let newtiles = [...this.props.game.tiles];
+    for (let tile of this.state.currentPiece.tiles) {
+      let neighbors = [];
+      for (let side = 0; side < 6; side++) {
+        let dir = directions[side];
+        let targetX = spot.x + tile.x + dir[0];
+        let targetY = spot.y + tile.y + dir[1];
+        let connected = null;
+        for (let i in this.props.game.tiles) {
+          let otherTile = this.props.game.tiles[i];
+          if (otherTile.x != targetX || otherTile.y != targetY) continue;
+          connected = i;
+          otherTile.neighbors[(side + 3) % 6] = this.props.game.tiles.length;
+          break;
+        }
+        neighbors.push(connected);
+      }
+      let newPiece = {
+        ...tile,
+        x: spot.x + tile.x,
+        y: spot.y + tile.y,
+        neighbors,
+      };
+      newtiles.push(newPiece);
+    }
+
+    let thisPlayer = this.props.game.players[this.props.playerId];
+    let sidebarPieces = thisPlayer.sidebarPieces;
+    sidebarPieces[this.state.currentPieceIndex] = GetRandomPiece(
+      this.state.currentPieceIndex + 1,
+      this.props.playerId,
+      thisPlayer.color
+    );
+
+    let pathData = GetPaths(this.props.game.tiles);
+    let summons = this.props.game.summons || [];
+    for (let pathId in pathData.pathsById) {
+      let path = pathData.pathsById[pathId];
+      if (
+        path.loop &&
+        (!(pathId in this.props.game.pathData.pathsById) ||
+          !this.props.game.pathData.pathsById[pathId].loop)
+      ) {
+        summons.push(this.summonFromPath(path, newtiles));
+      }
+    }
+
+    let currentPlayerIndex =
+      (this.props.game.currentPlayerIndex + 1) %
+      this.props.game.playerOrder.length;
+    let phase =
+      currentPlayerIndex == 0 && summons.length > 0 ? 'command' : 'place';
+
+    if (phase == 'command') {
+      for (let summon of summons) {
+        summon.controller =
+          summon.players[Math.floor(Math.random() * summon.players.length)];
+        summon.color = this.props.game.players[summon.controller].color;
+      }
+
       for (let pathId in pathData.pathsById) {
         let path = pathData.pathsById[pathId];
-        if (
-          path.loop &&
-          (!(pathId in prev.pathData.pathsById) ||
-            !prev.pathData.pathsById[pathId].loop)
-        ) {
-          summons.push(this.summonFromPath(path, prev.tiles));
-        }
-      }
+        if (!path.loop) continue;
 
-      let currentPlayerIndex =
-        (prev.currentPlayerIndex + 1) % this.state.game.playerOrder.length;
-      let phase =
-        currentPlayerIndex == 0 && prev.summons.length > 0
-          ? 'command'
-          : 'place';
+        let connectedPaths = [pathId];
+        for (let lineKey in path.lines) {
+          let line = path.lines[lineKey];
+          let tile = newtiles[line[0]];
 
-      if (phase == 'command') {
-        for (let summon of summons) {
-          summon.controller =
-            summon.players[Math.floor(Math.random() * summon.players.length)];
-          summon.color = prev.game.players[summon.controller].color;
-        }
+          let thisLine = tile.lines[line[1]];
+          let min = Math.min(thisLine[0], thisLine[1]);
+          let max = Math.max(thisLine[0], thisLine[1]);
+          let dist = max - min;
+          if (dist == 1 || dist == 5) continue;
 
-        for (let pathId in pathData.pathsById) {
-          let path = pathData.pathsById[pathId];
-          if (!path.loop) continue;
+          for (let i = 0; i < 3; i++) {
+            if (i == line[1]) continue;
+            let otherLine = tile.lines[i];
+            if (
+              (otherLine[0] < max && otherLine[0] > min) ==
+              (otherLine[1] < max && otherLine[1] > min)
+            )
+              continue;
 
-          let connectedPaths = [pathId];
-          for (let lineKey in path.lines) {
-            let line = path.lines[lineKey];
-            let tile = prev.tiles[line[0]];
-
-            let thisLine = tile.lines[line[1]];
-            let min = Math.min(thisLine[0], thisLine[1]);
-            let max = Math.max(thisLine[0], thisLine[1]);
-            let dist = max - min;
-            if (dist == 1 || dist == 5) continue;
-
-            for (let i = 0; i < 3; i++) {
-              if (i == line[1]) continue;
-              let otherLine = tile.lines[i];
-              if (
-                (otherLine[0] < max && otherLine[0] > min) ==
-                (otherLine[1] < max && otherLine[1] > min)
-              )
-                continue;
-
-              let pathKey = line[0] + '-' + i;
-              let id = pathData.paths[pathData.pathsByLine[pathKey]].id;
-              if (connectedPaths.includes(id)) continue;
-              connectedPaths.push(id);
-            }
+            let pathKey = line[0] + '-' + i;
+            let id = pathData.paths[pathData.pathsByLine[pathKey]].id;
+            if (connectedPaths.includes(id)) continue;
+            connectedPaths.push(id);
           }
-          path.connectedPaths = connectedPaths;
         }
+        path.connectedPaths = connectedPaths;
       }
+    }
 
-      return {
-        sidebarPieces,
-        pathData,
-        currentPiece: null,
-        currentPieceIndex: null,
-        tiles: prev.tiles,
-        sidebarUpdateToggle: !prev.sidebarUpdateToggle,
-        summons,
-        phase,
-        currentPlayerIndex,
-        currentSummonIndex: 0,
-      };
+    const dbRef = ref(getDatabase(), '/games/' + this.props.game.id);
+    set(dbRef, {
+      ...this.props.game,
+      pathData,
+      tiles: newtiles,
+      summons,
+      phase,
+      currentPlayerIndex,
+      currentSummonIndex: 0,
+    });
+
+    this.setState({
+      currentPiece: null,
+      currentPieceIndex: null,
+      sidebarUpdateToggle: !this.state.sidebarUpdateToggle,
     });
   };
 
@@ -267,13 +245,17 @@ export default class Game extends React.Component {
         );
       }
     }
+
+    let thisPlayer = this.props.game.players[this.props.playerId];
+    let sidebarPieces = thisPlayer.sidebarPieces;
+
     return (
       <div className="fullscreen" onMouseMove={this.onMove}>
         <PlayArea
-          tiles={this.state.tiles}
+          tiles={this.props.game.tiles}
           placePiece={this.placePiece}
           currentPiece={this.state.currentPiece}
-          pathData={this.state.pathData}
+          pathData={this.props.game.pathData}
           placementPosition={
             cp == null
               ? { x: 0, y: 0 }
@@ -282,23 +264,23 @@ export default class Game extends React.Component {
                   y: this.state.mouseY - cp.centerY,
                 }
           }
-          summons={this.state.summons}
+          summons={this.props.game.summons}
           activeSummon={
-            this.state.phase == 'place'
+            this.props.game.phase == 'place'
               ? null
-              : this.state.summons[this.state.currentSummonIndex]
+              : this.props.game.summons[this.props.game.currentSummonIndex]
           }
         />
         <Sidebar
           active={
-            this.state.phase == 'place' &&
-            this.state.game.playerOrder[this.state.currentPlayerIndex] ==
-              this.state.playerId
+            this.props.game.phase == 'place' &&
+            this.props.game.playerOrder[this.props.game.currentPlayerIndex] ==
+              this.props.playerId
           }
           key={'sidebar' + this.state.sidebarUpdateToggle}
-          pieces={this.state.sidebarPieces}
+          pieces={sidebarPieces}
           select={this.select}
-          selectedIndex={this.state.currentPieceIndex}
+          selectedIndex={this.props.game.currentPieceIndex}
           updateToggle={this.state.sidebarUpdateToggle}
         />
         {heldTiles}

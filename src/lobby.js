@@ -2,12 +2,58 @@ import React from 'react';
 import { getDatabase, set, ref } from 'firebase/database';
 import { playerColors } from './consts';
 import DirectionIndicator from './directionIndicator';
+import { GetRandomPiece, GetRandomTile, GetPaths } from './tileUtils';
 
 export default class Lobby extends React.Component {
   constructor(props) {
     super(props);
     this.state = { editing: false, name: '', hasCopied: false };
   }
+
+  startgame = () => {
+    let players = this.props.game.players;
+    let playerOrder = Object.keys(players);
+    playerOrder.sort(
+      (a, b) => parseInt(players[a].order) - parseInt(players[b].order)
+    );
+    for (let i in playerOrder) {
+      let playerId = playerOrder[i];
+      let player = players[playerId];
+      player.color = playerColors[i][0];
+      player.sidebarPieces = [
+        GetRandomPiece(1, playerId, player.color),
+        GetRandomPiece(2, playerId, player.color),
+        GetRandomPiece(3, playerId, player.color),
+        GetRandomPiece(4, playerId, player.color),
+      ];
+    }
+
+    let tiles = [
+      {
+        ...GetRandomTile(),
+        x: 0,
+        y: 0,
+        neighbors: [null, null, null, null, null, null],
+      },
+    ];
+
+    let game = {
+      id: this.props.game.id,
+      pathData: GetPaths(tiles),
+      tiles,
+      summons: [],
+      phase: 'place',
+      currentPlayerIndex: 0,
+      mode: 'game',
+      playerOrder,
+      players,
+    };
+
+    const gameId = this.props.game.id;
+    const dbRef = ref(getDatabase(), '/games/' + gameId);
+    set(dbRef, game);
+  };
+
   render() {
     let link = window.location.href;
     if (!link.includes('?')) {
@@ -125,7 +171,9 @@ export default class Lobby extends React.Component {
             {this.state.hasCopied ? 'Copied!' : 'Copy'}
           </button>
         </div>
-        <button className="bigButton">Start Game</button>
+        <button className="bigButton" onClick={this.startgame}>
+          Start Game
+        </button>
       </div>
     );
   }

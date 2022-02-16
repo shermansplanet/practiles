@@ -1,4 +1,5 @@
 import Lobby from './lobby';
+import Game from './game';
 import React from 'react';
 import {
   getDatabase,
@@ -126,6 +127,9 @@ export default class Main extends React.Component {
         </button>
       );
     }
-    return <Lobby game={this.state.game} playerId={this.state.playerId} />;
+    if (this.state.game.mode == 'lobby') {
+      return <Lobby game={this.state.game} playerId={this.state.playerId} />;
+    }
+    return <Game game={this.state.game} playerId={this.state.playerId} />;
   }
 }
