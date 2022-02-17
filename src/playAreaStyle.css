@@ -47,4 +47,5 @@
   transform: translate(-71px, 32px) scale(0.75);
   transition-duration: 0.3s;
   font-size: 10pt;
+  pointer-events: none;
 }

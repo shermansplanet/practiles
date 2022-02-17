@@ -287,6 +287,7 @@ export default class Game extends React.Component {
           selectedIndex={this.props.game.currentPieceIndex}
           updateToggle={this.state.sidebarUpdateToggle}
         />
+        {heldTiles}
         <DirectionIndicator playerCount={this.props.game.playerOrder.length} />
         <div
           style={{
@@ -295,6 +296,7 @@ export default class Game extends React.Component {
             width: '500px',
             flexWrap: 'wrap',
             alignItems: 'flex-start',
+            pointerEvents: 'none',
           }}
         >
           {this.props.game.playerOrder.map((val, i) => {
@@ -322,7 +324,6 @@ export default class Game extends React.Component {
             );
           })}
         </div>
-        {heldTiles}
       </div>
     );
   }

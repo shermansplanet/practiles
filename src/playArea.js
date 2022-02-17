@@ -184,6 +184,7 @@ export default class PlayArea extends React.Component {
           key={'summon_' + i + JSON.stringify(pos)}
           data={summon}
           pos={pos}
+          highlight={summon == this.props.activeSummon}
         />
       );
     }
