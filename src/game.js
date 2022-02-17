@@ -209,9 +209,7 @@ export default class Game extends React.Component {
   takeOption = (option) => {
     let summons = this.props.game.summons;
     let summon = summons[this.props.game.currentSummonIndex];
-    if (option.type == 'move') {
-      summon.tileIndex = option.tile;
-    }
+    summon.tileIndex = option.tile;
 
     let currentSummonIndex =
       (this.props.game.currentSummonIndex + 1) % summons.length;
