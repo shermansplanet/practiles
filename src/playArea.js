@@ -189,6 +189,22 @@ export default class PlayArea extends React.Component {
       );
     }
 
+    let summonOptions = [];
+    for (let o of this.props.summonOptions || []) {
+      summonOptions.push(
+        <button
+          style={{
+            left: tilePositions[o].x + POLYGON_EDGE_RADIUS + 'px',
+            top: tilePositions[o].y + POLYGON_TIP_RADIUS + 'px',
+          }}
+          key={'option_' + o}
+          className="summonOption"
+        >
+          ↓
+        </button>
+      );
+    }
+
     return (
       <div
         onMouseDown={this.click}
@@ -208,6 +224,7 @@ export default class PlayArea extends React.Component {
       >
         {shadow}
         {tiles}
+        {summonOptions}
         {summons}
       </div>
     );

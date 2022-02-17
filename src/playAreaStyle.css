@@ -49,3 +49,22 @@
   font-size: 10pt;
   pointer-events: none;
 }
+
+.summonOption {
+  position: absolute;
+  background-color: white;
+  border: 4px solid #eee;
+  margin: -14px;
+  border-radius: 100px;
+  box-shadow: 0px 2px 2px 0 #0008;
+  transition-duration: 0.1s;
+}
+
+.summonOption:hover {
+  box-shadow: 0px 5px 5px 0 #0008;
+}
+
+.summonOption:active {
+  box-shadow: 0px 2px 2px 0 #0008;
+  transition-duration: 0s;
+}

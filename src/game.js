@@ -100,6 +100,8 @@ export default class Game extends React.Component {
     let phase =
       currentPlayerIndex == 0 && summons.length > 0 ? 'command' : 'place';
 
+    let summonOptions = [];
+
     if (phase == 'command') {
       for (let summon of summons) {
         summon.controller =
@@ -141,6 +143,8 @@ export default class Game extends React.Component {
         }
         path.connectedPaths = connectedPaths;
       }
+
+      summonOptions = this.getSummonOptions(summons, newtiles, pathData, 0);
     }
 
     const dbRef = ref(getDatabase(), '/games/' + this.props.game.id);
@@ -150,6 +154,7 @@ export default class Game extends React.Component {
       tiles: newtiles,
       summons,
       phase,
+      summonOptions,
       currentPlayerIndex,
       currentSummonIndex: 0,
     });
@@ -160,6 +165,18 @@ export default class Game extends React.Component {
       sidebarUpdateToggle: !this.state.sidebarUpdateToggle,
     });
   };
+
+  getSummonOptions(summons, newtiles, pathData, currentSummonIndex) {
+    let moveTiles = {};
+    let summon = summons[currentSummonIndex];
+    for (let pathId of pathData.pathsById[summon.pathId].connectedPaths) {
+      let lines = pathData.pathsById[pathId].lines;
+      for (let i in lines) {
+        moveTiles[lines[i][0]] = true;
+      }
+    }
+    return Object.keys(moveTiles);
+  }
 
   summonFromPath = (path, tiles) => {
     let sTypes = [];
@@ -259,6 +276,7 @@ export default class Game extends React.Component {
           placePiece={this.placePiece}
           currentPiece={this.state.currentPiece}
           pathData={this.props.game.pathData}
+          summonOptions={this.props.game.summonOptions}
           placementPosition={
             cp == null
               ? { x: 0, y: 0 }
