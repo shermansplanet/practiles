@@ -9,6 +9,7 @@ import {
 import { directions, pointstring } from './tileUtils';
 import Tile from './tile';
 import Summon from './summon';
+import { getDatabase, ref, set } from 'firebase/database';
 
 export default class PlayArea extends React.Component {
   constructor(props) {
@@ -190,14 +191,22 @@ export default class PlayArea extends React.Component {
     }
 
     let summonOptions = [];
-    for (let o of this.props.summonOptions || []) {
+    for (let i in this.props.summonOptions || []) {
+      let o = this.props.summonOptions[i];
+      let x = tilePositions[o.tile].x + POLYGON_EDGE_RADIUS;
+      let y = tilePositions[o.tile].y + POLYGON_TIP_RADIUS;
       summonOptions.push(
         <button
-          style={{
-            left: tilePositions[o].x + POLYGON_EDGE_RADIUS + 'px',
-            top: tilePositions[o].y + POLYGON_TIP_RADIUS + 'px',
+          onClick={() => {
+            this.props.takeOption(o);
           }}
-          key={'option_' + o}
+          style={{
+            left: x + 'px',
+            top: y + 'px',
+          }}
+          key={
+            'option_' + i + tilePositions[o.tile].x + tilePositions[o.tile].y
+          }
           className="summonOption"
         >
           ↓

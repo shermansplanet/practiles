@@ -175,8 +175,65 @@ export default class Game extends React.Component {
         moveTiles[lines[i][0]] = true;
       }
     }
-    return Object.keys(moveTiles);
+    let options = [];
+
+    let summonsByTile = {};
+    for (let si in summons) {
+      summonsByTile[summons[si].tileIndex] = si;
+    }
+
+    for (let tileIndex of Object.keys(moveTiles)) {
+      if (tileIndex in summonsByTile) continue;
+      options.push({ type: 'move', tile: tileIndex });
+      let tile = newtiles[tileIndex];
+      for (let i in tile.neighbors) {
+        let neighbor = tile.neighbors[i];
+        if (neighbor == -1) {
+          continue;
+        }
+        if (
+          neighbor in summonsByTile &&
+          summonsByTile[neighbor] != currentSummonIndex
+        ) {
+          options.push({
+            type: 'attack',
+            tile: tileIndex,
+            target: summonsByTile[neighbor],
+          });
+        }
+      }
+    }
+    return options;
   }
+
+  takeOption = (option) => {
+    let summons = this.props.game.summons;
+    let summon = summons[this.props.game.currentSummonIndex];
+    if (option.type == 'move') {
+      summon.tileIndex = option.tile;
+    }
+
+    let currentSummonIndex =
+      (this.props.game.currentSummonIndex + 1) % summons.length;
+    let phase = currentSummonIndex == 0 ? 'place' : 'command';
+
+    let summonOptions = this.getSummonOptions(
+      summons,
+      this.props.game.tiles,
+      this.props.game.pathData,
+      currentSummonIndex
+    );
+
+    const dbRef = ref(getDatabase(), '/games/' + this.props.game.id);
+    set(dbRef, {
+      ...this.props.game,
+      summons,
+      phase,
+      summonOptions,
+      currentPlayerIndex: 0,
+      currentSummonIndex,
+    });
+  };
 
   summonFromPath = (path, tiles) => {
     let sTypes = [];
@@ -268,15 +325,24 @@ export default class Game extends React.Component {
 
     let thisPlayer = this.props.game.players[this.props.playerId];
     let sidebarPieces = thisPlayer == undefined ? [] : thisPlayer.sidebarPieces;
+    let activeSummon =
+      this.props.game.phase == 'place'
+        ? null
+        : this.props.game.summons[this.props.game.currentSummonIndex];
 
     return (
       <div className="fullscreen" onMouseMove={this.onMove}>
         <PlayArea
+          takeOption={this.takeOption}
           tiles={this.props.game.tiles}
           placePiece={this.placePiece}
           currentPiece={this.state.currentPiece}
           pathData={this.props.game.pathData}
-          summonOptions={this.props.game.summonOptions}
+          summonOptions={
+            activeSummon && activeSummon.controller == this.props.playerId
+              ? this.props.game.summonOptions
+              : null
+          }
           placementPosition={
             cp == null
               ? { x: 0, y: 0 }
@@ -287,11 +353,8 @@ export default class Game extends React.Component {
           }
           summons={this.props.game.summons}
           players={this.props.game.players}
-          activeSummon={
-            this.props.game.phase == 'place'
-              ? null
-              : this.props.game.summons[this.props.game.currentSummonIndex]
-          }
+          gameId={this.props.game.id}
+          activeSummon={activeSummon}
         />
         <Sidebar
           active={
