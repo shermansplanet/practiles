@@ -257,8 +257,10 @@ export function GetName(summon) {
   let both = [];
   let otherType = 'Spirit';
   let specialType = false;
+  let symbolCounts = {};
   for (let symbol of summon.parts) {
     let part = components[symbol];
+    symbolCounts[part] = part in symbolCounts ? symbolCounts[part] + 1 : 1;
     if (!specialType && part.isBase) {
       otherType = part.isBase === true ? part.name : part.isBase;
       specialType = true;
@@ -282,7 +284,9 @@ export function GetName(summon) {
   }
 
   function shuffle(array) {
-    var random = array.map((x) => Math.random + 10 - x.p.length - x.s.length);
+    var random = array.map(
+      (x) => Math.random + 100 - (x.p.length + x.s.length) - symbolCounts[x] * 3
+    );
     array.sort(function (a, b) {
       return random[a] - random[b];
     });

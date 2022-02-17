@@ -284,7 +284,7 @@ export default class Game extends React.Component {
           key={'sidebar' + this.state.sidebarUpdateToggle}
           pieces={sidebarPieces}
           select={this.select}
-          selectedIndex={this.props.game.currentPieceIndex}
+          selectedIndex={this.state.currentPieceIndex}
           updateToggle={this.state.sidebarUpdateToggle}
         />
         {heldTiles}

@@ -174,7 +174,7 @@ export default class Tile extends React.Component {
             points={pointstring}
             style={{
               fill: bg,
-              stroke: this.props.highlighted ? '#900' : '#0003',
+              stroke: this.props.highlighted ? '#000' : '#0003',
               strokeWidth: this.props.highlighted ? 4 : 2,
             }}
           />
