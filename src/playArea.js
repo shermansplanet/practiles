@@ -205,7 +205,12 @@ export default class PlayArea extends React.Component {
             top: y + 'px',
           }}
           key={
-            'option_' + i + tilePositions[o.tile].x + tilePositions[o.tile].y
+            'option_' +
+            i +
+            '_' +
+            this.props.activeSummon +
+            tilePositions[o.tile].x +
+            tilePositions[o.tile].y
           }
           className="summonOption"
         >
