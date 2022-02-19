@@ -378,30 +378,58 @@ export default class Game extends React.Component {
             pointerEvents: 'none',
           }}
         >
-          {this.props.game.playerOrder.map((val, i) => {
-            let player = this.props.game.players[val];
-            let selected =
-              this.props.game.phase == 'place'
-                ? this.props.game.currentPlayerIndex == i
-                : this.props.game.summons[this.props.game.currentSummonIndex]
-                    .controller == val;
-            return (
-              <div
-                key={'playerList_' + i}
-                className="playerListElement"
-                style={{
-                  backgroundColor: player.color,
-                  color: player.darkColor,
-                  borderColor: selected ? player.brightColor : player.darkColor,
-                  boxShadow: selected
-                    ? '0 0 20px 0 ' + player.brightColor
-                    : null,
-                }}
-              >
-                {this.props.game.players[val].name}
-              </div>
-            );
-          })}
+          {this.props.game.phase == 'place'
+            ? this.props.game.playerOrder.map((val, i) => {
+                let player = this.props.game.players[val];
+                let selected = this.props.game.currentPlayerIndex == i;
+                // this.props.game.phase == 'place'
+                //   ? this.props.game.currentPlayerIndex == i
+                //   : this.props.game.summons[this.props.game.currentSummonIndex]
+                //       .controller == val;
+                return (
+                  <div
+                    key={'playerList_' + i}
+                    className="playerListElement"
+                    style={{
+                      backgroundColor: player.color,
+                      color: player.darkColor,
+                      borderColor: selected
+                        ? player.brightColor
+                        : player.darkColor,
+                      boxShadow: selected
+                        ? '0 0 20px 0 ' + player.brightColor
+                        : null,
+                    }}
+                  >
+                    {this.props.game.players[val].name}
+                  </div>
+                );
+              })
+            : this.props.game.summons.map((val, i) => {
+                let player = this.props.game.players[val.controller];
+                let selected = this.props.game.currentSummonIndex == i;
+                return (
+                  <div
+                    key={'playerList_' + i}
+                    className="playerListElement"
+                    style={{
+                      backgroundColor: player.color,
+                      color: player.darkColor,
+                      borderColor: selected
+                        ? player.brightColor
+                        : player.darkColor,
+                      boxShadow: selected
+                        ? '0 0 20px 0 ' + player.brightColor
+                        : null,
+                      flexDirection: 'column',
+                      alignItems: 'flex-start',
+                    }}
+                  >
+                    <b style={{ fontSize: '12pt' }}>{val.name}</b>
+                    <i style={{ fontSize: '10pt' }}>{player.name}</i>
+                  </div>
+                );
+              })}
         </div>
       </div>
     );
