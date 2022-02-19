@@ -11,8 +11,8 @@ export default class Tile extends React.Component {
   render() {
     let linedata = this.props.lines;
     let lines = [];
-    const bg = this.props.color || 'white';
-    const fg = '#555';
+    const bg = this.props.color || '#333';
+    const fg = '#888';
 
     let infobox = null;
 
@@ -174,13 +174,32 @@ export default class Tile extends React.Component {
             points={pointstring}
             style={{
               fill: bg,
-              stroke: this.props.highlighted ? '#000' : '#0003',
+              stroke: this.props.highlighted ? '#000' : '#fff3',
               strokeWidth: this.props.highlighted ? 4 : 2,
             }}
           />
           {lines}
         </svg>
         {infobox}
+        <svg
+          height={POLYGON_TIP_RADIUS * 2}
+          width={POLYGON_EDGE_RADIUS * 2}
+          style={{
+            pointerEvents: 'none',
+            position: 'absolute',
+            transform: `translate(${this.props.x}px, ${this.props.y + 6}px)`,
+            zIndex: '-10',
+            opacity: this.props.inactive ? 0 : 1,
+          }}
+        >
+          <polygon
+            points={pointstring}
+            style={{
+              fill: 'black',
+              stroke: 'none',
+            }}
+          />
+        </svg>
       </div>
     );
   }

@@ -78,7 +78,7 @@ export default class Game extends React.Component {
     sidebarPieces[this.state.currentPieceIndex] = GetRandomPiece(
       this.state.currentPieceIndex + 1,
       this.props.playerId,
-      thisPlayer.color
+      thisPlayer.darkColor
     );
 
     let pathData = GetPaths(newtiles);
