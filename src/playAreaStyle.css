@@ -22,7 +22,7 @@
 }
 
 .summon:hover {
-  transform: translate(-18px, -18px) scale(1.5);
+  transform: translate(-18px, -18px) scale(1.2);
 }
 
 .summonEmoji {

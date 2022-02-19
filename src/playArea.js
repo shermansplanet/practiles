@@ -9,7 +9,6 @@ import {
 import { directions, pointstring } from './tileUtils';
 import Tile from './tile';
 import Summon from './summon';
-import { getDatabase, ref, set } from 'firebase/database';
 
 export default class PlayArea extends React.Component {
   constructor(props) {
@@ -196,11 +195,10 @@ export default class PlayArea extends React.Component {
       let y = tilePositions[o.tile].y + POLYGON_TIP_RADIUS;
       let angle = 0;
       if (o.type == 'attack') {
-        let otherX = tilePositions[o.targetTile].x + POLYGON_EDGE_RADIUS;
-        let otherY = tilePositions[o.targetTile].y + POLYGON_TIP_RADIUS;
-        angle = Math.atan2(otherY - y, otherX - x);
-        x = (x + otherX) / 2;
-        y = (y + otherY) / 2;
+        let dir = directions[o.direction];
+        angle = (o.direction * Math.PI) / 3;
+        y += (dir[1] * POLYGON_OFFSET) / 2;
+        x += (dir[0] + dir[1] / 2) * POLYGON_EDGE_RADIUS;
       }
       summonOptions.push(
         <button

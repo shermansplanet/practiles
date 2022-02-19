@@ -204,7 +204,7 @@ export default class Game extends React.Component {
           options.push({
             type: 'attack',
             tile: tileIndex,
-            targetTile: neighbor,
+            direction: i,
             target: summonsByTile[neighbor],
           });
         }
