@@ -26,10 +26,10 @@ export default class Lobby extends React.Component {
       player.darkColor = playerColors[i][1];
       player.brightColor = playerColors[i][2];
       player.sidebarPieces = [
-        GetRandomPiece(1, playerId, player.color),
-        GetRandomPiece(2, playerId, player.color),
-        GetRandomPiece(3, playerId, player.color),
-        GetRandomPiece(4, playerId, player.color),
+        GetRandomPiece(1, playerId, player.darkColor),
+        GetRandomPiece(2, playerId, player.darkColor),
+        GetRandomPiece(3, playerId, player.darkColor),
+        GetRandomPiece(4, playerId, player.darkColor),
       ];
     }
 
@@ -79,8 +79,9 @@ export default class Lobby extends React.Component {
           style={
             i < playerColors.length
               ? {
-                  backgroundColor: playerColors[i][0],
-                  borderColor: playerColors[i][1],
+                  backgroundColor: playerColors[i][1],
+                  borderColor: playerColors[i][2],
+                  color: playerColors[i][0],
                 }
               : null
           }

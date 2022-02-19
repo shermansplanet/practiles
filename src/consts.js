@@ -5,12 +5,12 @@ export const POLYGON_OFFSET = POLYGON_TIP_RADIUS * (1 + Math.cos(Math.PI / 3));
 export const SIDEBAR_WIDTH = POLYGON_EDGE_RADIUS * 9.7;
 
 export const playerColors = [
-  ['#030', '#cfc', '#0f0'],
-  ['#008', '#bef', '#00f'],
-  ['#520', '#feb', '#a40'],
-  ['#505', '#fdf', '#a0a'],
-  ['#055', '#cff', '#0aa'],
-  ['#500', '#fcc', '#f00'],
+  ['#afa', '#040', '#0a0'],
+  ['#fd9', '#631', '#c40'],
+  ['#bcf', '#228', '#36f'],
+  ['#fbf', '#615', '#c0c'],
+  ['#aee', '#055', '#099'],
+  ['#fbb', '#601', '#f00'],
 ];
 
 export const colorMapping = [

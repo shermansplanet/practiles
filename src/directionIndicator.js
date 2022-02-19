@@ -47,7 +47,7 @@ export default class DirectionIndicator extends React.Component {
             points={pointstring}
             style={{
               fill: 'none',
-              stroke: 'black',
+              stroke: '#555',
               strokeWidth: 2,
             }}
           />
