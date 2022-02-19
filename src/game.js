@@ -183,8 +183,14 @@ export default class Game extends React.Component {
     }
 
     for (let tileIndex of Object.keys(moveTiles)) {
-      if (tileIndex in summonsByTile) continue;
-      options.push({ type: 'move', tile: tileIndex });
+      if (
+        tileIndex in summonsByTile &&
+        summonsByTile[tileIndex] != currentSummonIndex
+      )
+        continue;
+      if (!(tileIndex in summonsByTile)) {
+        options.push({ type: 'move', tile: tileIndex });
+      }
       let tile = newtiles[tileIndex];
       for (let i in tile.neighbors) {
         let neighbor = tile.neighbors[i];
@@ -198,6 +204,7 @@ export default class Game extends React.Component {
           options.push({
             type: 'attack',
             tile: tileIndex,
+            targetTile: neighbor,
             target: summonsByTile[neighbor],
           });
         }
@@ -415,6 +422,7 @@ export default class Game extends React.Component {
                     style={{
                       backgroundColor: player.color,
                       color: player.darkColor,
+                      opacity: selected ? 1 : 0.5,
                       borderColor: selected
                         ? player.brightColor
                         : player.darkColor,

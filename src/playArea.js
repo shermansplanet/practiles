@@ -194,6 +194,14 @@ export default class PlayArea extends React.Component {
       let o = this.props.summonOptions[i];
       let x = tilePositions[o.tile].x + POLYGON_EDGE_RADIUS;
       let y = tilePositions[o.tile].y + POLYGON_TIP_RADIUS;
+      let angle = 0;
+      if (o.type == 'attack') {
+        let otherX = tilePositions[o.targetTile].x + POLYGON_EDGE_RADIUS;
+        let otherY = tilePositions[o.targetTile].y + POLYGON_TIP_RADIUS;
+        angle = Math.atan2(otherY - y, otherX - x);
+        x = (x + otherX) / 2;
+        y = (y + otherY) / 2;
+      }
       summonOptions.push(
         <button
           onClick={() => {
@@ -202,7 +210,7 @@ export default class PlayArea extends React.Component {
           style={{
             left: x + 'px',
             top: y + 'px',
-            animationDelay: '-' + Math.floor(Math.random() * 10) / 10 + 's',
+            animationDelay: '-' + i / 10 + 's',
           }}
           key={
             'option_' +
@@ -214,7 +222,14 @@ export default class PlayArea extends React.Component {
           }
           className="summonOption"
         >
-          ↓
+          <div
+            style={{
+              fontSize: '12pt',
+              transform: `rotate(${angle}rad)`,
+            }}
+          >
+            {o.type == 'attack' ? '➤' : '★'}
+          </div>
         </button>
       );
     }

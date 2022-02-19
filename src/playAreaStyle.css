@@ -73,6 +73,10 @@
   height: 32px;
   transition-duration: 0.2s;
 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   animation-name: pulse;
   animation-duration: 1s;
   animation-iteration-count: infinite;
