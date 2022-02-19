@@ -189,7 +189,7 @@ export default class PlayArea extends React.Component {
       );
     }
 
-    let summonOptions = [];
+    const summonOptions = [];
     for (let i in this.props.summonOptions || []) {
       let o = this.props.summonOptions[i];
       let x = tilePositions[o.tile].x + POLYGON_EDGE_RADIUS;
@@ -202,6 +202,7 @@ export default class PlayArea extends React.Component {
           style={{
             left: x + 'px',
             top: y + 'px',
+            animationDelay: '-' + Math.floor(Math.random() * 10) / 10 + 's',
           }}
           key={
             'option_' +
@@ -219,7 +220,16 @@ export default class PlayArea extends React.Component {
     }
 
     return (
-      <div>
+      <div
+        style={{
+          top: 0,
+          bottom: 0,
+          left: 0,
+          right: 0,
+          position: 'absolute',
+          zIndex: '-100',
+        }}
+      >
         <div
           onMouseDown={this.click}
           onMouseUp={this.unclick}

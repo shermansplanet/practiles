@@ -51,6 +51,15 @@
   pointer-events: none;
 }
 
+@keyframes pulse {
+  from {
+    transform: scale(1.1);
+  }
+  to {
+    transform: scale(0.9);
+  }
+}
+
 .summonOption {
   position: absolute;
   background-color: #444;
@@ -63,6 +72,11 @@
   width: 32px;
   height: 32px;
   transition-duration: 0.2s;
+
+  animation-name: pulse;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
 }
 
 .summonOption:hover {
