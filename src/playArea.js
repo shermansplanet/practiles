@@ -120,13 +120,12 @@ export default class PlayArea extends React.Component {
               pointerEvents: 'none',
               position: 'absolute',
               transform: `translate(${x}px, ${y}px)`,
-              //transitionDuration: '0.1s',
             }}
           >
             <polygon
               points={pointstring}
               style={{
-                fill: '#0002',
+                fill: '#fff2',
                 stroke: 'none',
               }}
             />
@@ -220,22 +219,23 @@ export default class PlayArea extends React.Component {
     }
 
     return (
-      <div
-        onMouseDown={this.click}
-        onMouseUp={this.unclick}
-        onMouseLeave={this.unclick}
-        onMouseMove={this.drag}
-        className="playArea"
-        style={{
-          right: SIDEBAR_WIDTH,
-          cursor: canPlace
-            ? 'default'
-            : this.state.mouseDown
-            ? 'grabbing'
-            : 'grab',
-        }}
-        ref={this.areaRef}
-      >
+      <div>
+        <div
+          onMouseDown={this.click}
+          onMouseUp={this.unclick}
+          onMouseLeave={this.unclick}
+          onMouseMove={this.drag}
+          className="playArea"
+          style={{
+            right: SIDEBAR_WIDTH,
+            cursor: canPlace
+              ? 'default'
+              : this.state.mouseDown
+              ? 'grabbing'
+              : 'grab',
+          }}
+          ref={this.areaRef}
+        />
         {shadow}
         {tiles}
         {summonOptions}

@@ -12,7 +12,7 @@ export default class Tile extends React.Component {
     let linedata = this.props.lines;
     let lines = [];
     const bg = this.props.color || '#333';
-    const fg = '#888';
+    const fg = '#777';
 
     let infobox = null;
 

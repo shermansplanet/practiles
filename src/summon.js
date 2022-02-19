@@ -38,7 +38,10 @@ export default class Summon extends React.Component {
         style={{
           top: this.props.pos.y + POLYGON_TIP_RADIUS + 'px',
           left: this.props.pos.x + POLYGON_EDGE_RADIUS + 'px',
-          borderColor: this.props.highlight ? data.highlightColor : data.color,
+          borderColor: this.props.highlight ? data.color : data.highlightColor,
+          boxShadow: this.props.highlight
+            ? '0 0 10px 5px ' + data.highlightColor
+            : 'none',
         }}
       >
         {emoji}
