@@ -1,5 +1,5 @@
 import React from 'react';
-import { POLYGON_OFFSET, POLYGON_EDGE_RADIUS } from './consts';
+import { POLYGON_OFFSET, POLYGON_EDGE_RADIUS, colorMapping } from './consts';
 
 import { directions, GetPaths, GetRandomPiece, RotatePiece } from './tileUtils';
 
@@ -168,14 +168,30 @@ export default class Game extends React.Component {
 
   getSummonOptions(summons, newtiles, pathData, currentSummonIndex) {
     let moveTiles = {};
+    let options = [];
     let summon = summons[currentSummonIndex];
+    let mapping = colorMapping[this.props.game.playerOrder.length];
     for (let pathId of pathData.pathsById[summon.pathId].connectedPaths) {
       let lines = pathData.pathsById[pathId].lines;
       for (let i in lines) {
         moveTiles[lines[i][0]] = true;
+
+        let tile = newtiles[lines[i][0]];
+        let line = tile.lines[lines[i][1]];
+        for (let ii = 0; ii < 2; ii++) {
+          let direction = line[ii];
+          if (tile.neighbors[direction] != -1) continue;
+          let target = mapping[direction];
+          if (target == null) continue;
+          options.push({
+            type: 'attackplayer',
+            tile: lines[i][0],
+            direction,
+            target,
+          });
+        }
       }
     }
-    let options = [];
 
     let summonsByTile = {};
     for (let si in summons) {

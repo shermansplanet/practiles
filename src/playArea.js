@@ -5,6 +5,7 @@ import {
   POLYGON_TIP_RADIUS,
   POLYGON_EDGE_RADIUS,
   SIDEBAR_WIDTH,
+  playerColors,
 } from './consts';
 import { directions, pointstring } from './tileUtils';
 import Tile from './tile';
@@ -194,22 +195,29 @@ export default class PlayArea extends React.Component {
       let x = tilePositions[o.tile].x + POLYGON_EDGE_RADIUS;
       let y = tilePositions[o.tile].y + POLYGON_TIP_RADIUS;
       let angle = 0;
-      if (o.type == 'attack') {
+      if (o.type != 'move') {
         let dir = directions[o.direction];
         angle = (o.direction * Math.PI) / 3;
         y += (dir[1] * POLYGON_OFFSET) / 2;
         x += (dir[0] + dir[1] / 2) * POLYGON_EDGE_RADIUS;
+      }
+      let style = { fontSize: '12pt', transform: `rotate(${angle}rad)` };
+      let parentStyle = {
+        left: x + 'px',
+        top: y + 'px',
+        animationDelay: '-' + i / 10 + 's',
+      };
+      if (o.type == 'attackplayer') {
+        let col = playerColors[o.target];
+        parentStyle.borderColor = col[2];
+        style.color = col[2];
       }
       summonOptions.push(
         <button
           onClick={() => {
             this.props.takeOption(o);
           }}
-          style={{
-            left: x + 'px',
-            top: y + 'px',
-            animationDelay: '-' + i / 10 + 's',
-          }}
+          style={parentStyle}
           key={
             'option_' +
             i +
@@ -220,14 +228,7 @@ export default class PlayArea extends React.Component {
           }
           className="summonOption"
         >
-          <div
-            style={{
-              fontSize: '12pt',
-              transform: `rotate(${angle}rad)`,
-            }}
-          >
-            {o.type == 'attack' ? '➤' : '★'}
-          </div>
+          <div style={style}>{o.type == 'move' ? '★' : '➤'}</div>
         </button>
       );
     }
