@@ -59,6 +59,20 @@ export default class Lobby extends React.Component {
     set(dbRef, game);
   };
 
+  onEdit = () => {
+    if (this.state.editing) {
+      const gameId = this.props.game.id;
+      const dbRef = ref(
+        getDatabase(),
+        '/games/' + gameId + '/players/' + this.props.playerId + '/name'
+      );
+      set(dbRef, this.state.name);
+    }
+    this.setState((prev) => {
+      return { editing: !prev.editing };
+    });
+  };
+
   render() {
     let link = window.location.href;
     if (!link.includes('?')) {
@@ -87,39 +101,25 @@ export default class Lobby extends React.Component {
           }
         >
           {pid == this.props.playerId && this.state.editing ? (
-            <input
-              ref={(ref) => {
-                if (ref && ref.focus) ref.focus();
-              }}
-              value={this.state.name}
-              onChange={(e) =>
-                this.setState({ name: e.target.value.substring(0, 20) })
-              }
-            />
+            <form
+              style={{ padding: '0px', margin: '0px' }}
+              onSubmit={this.onEdit}
+            >
+              <input
+                ref={(ref) => {
+                  if (ref && ref.focus) ref.focus();
+                }}
+                value={this.state.name}
+                onChange={(e) =>
+                  this.setState({ name: e.target.value.substring(0, 20) })
+                }
+              />
+            </form>
           ) : (
             players[pid].name || `Player ${parseInt(i) + 1}`
           )}
           {pid == this.props.playerId ? (
-            <button
-              className="textButton"
-              onClick={() => {
-                if (this.state.editing) {
-                  const gameId = this.props.game.id;
-                  const dbRef = ref(
-                    getDatabase(),
-                    '/games/' +
-                      gameId +
-                      '/players/' +
-                      this.props.playerId +
-                      '/name'
-                  );
-                  set(dbRef, this.state.name);
-                }
-                this.setState((prev) => {
-                  return { editing: !prev.editing };
-                });
-              }}
-            >
+            <button className="textButton" onClick={this.onEdit}>
               {this.state.editing ? '✓' : '✎'}
             </button>
           ) : null}
